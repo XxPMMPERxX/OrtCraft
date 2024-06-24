@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "target": "es2022",
+        "module": "es2022",
+        "moduleResolution": "node",
+        "baseUrl": "./",
+        "strict": true,
+        "skipLibCheck": true,
+        "noImplicitAny": false,
+        "paths": {
+            "@/*": ["resources/js/*"]
+        },
+    },
+    "include": ["resources/js/**/*"]
+}
