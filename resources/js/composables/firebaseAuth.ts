@@ -4,12 +4,14 @@ import {
   type User,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  AuthErrorCodes,
 } from 'firebase/auth'
 import { ref } from 'vue'
 import firebaseApp from '@/config/firebase';
-import apiClient from '@/apiClient';
+import { FirebaseError } from 'firebase/app';
 
 const firebaseUser = ref<User | null>(null);
+const errorText = ref('');
 const auth = getAuth(firebaseApp);
 
 const initUser = () => {
@@ -29,6 +31,7 @@ auth.onAuthStateChanged((user) => {
 export const useAuth = () => {
 
   const signUp = async (email: string, password: string) => {
+    errorText.value = '';
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -36,12 +39,15 @@ export const useAuth = () => {
         password
       );
       firebaseUser.value = userCredential.user;
+      return true;
     } catch (e) {
-      signOut();
+      await signOut();
+      return false;
     }
   }
 
   const signIn = async (email: string, password: string) => {
+    errorText.value = '';
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -49,8 +55,16 @@ export const useAuth = () => {
         password
       );
       firebaseUser.value = userCredential.user;
+      return true;
     } catch (e) {
-      signOut();
+      if (e instanceof FirebaseError) {
+        console.log(e.code, AuthErrorCodes.INVALID_LOGIN_CREDENTIALS, e.code === AuthErrorCodes.INVALID_LOGIN_CREDENTIALS);
+        if (e.code === AuthErrorCodes.INVALID_LOGIN_CREDENTIALS) {
+          errorText.value = 'メールアドレスまたはパスワードが間違っています';
+        }
+      }
+      await signOut();
+      return false;
     }
 
   }
@@ -65,6 +79,7 @@ export const useAuth = () => {
     signIn,
     signUp,
     signOut,
+    errorText,
     firebaseUser,
   }
 }
