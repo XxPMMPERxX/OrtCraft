@@ -100,6 +100,18 @@ services:
             - '/dev/shm:/dev/shm'
         networks:
             - sail
+    firebase:
+        build:
+            context: .
+            dockerfile: ./firebase_emulator/Dockerfile
+        volumes:
+            - ./firebase_emulator:/opt/firebase
+        ports:
+        - 9099:9099 # Firebase Authentication
+        - 4000:4000 # Emulator Suite UI
+        working_dir: /opt/firebase
+        command: firebase emulators:start
+        tty: true
 networks:
     sail:
         driver: bridge

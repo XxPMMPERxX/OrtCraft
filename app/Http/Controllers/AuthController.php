@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Utils\MockIdTokenVerify;
 
 class AuthController extends Controller
 {
@@ -13,13 +14,16 @@ class AuthController extends Controller
         $auth = app('firebase.auth');
         $id_token = $request->headers->get('Authorization');
 
+
         try {
-            $verified_id_token = $auth->verifyIdToken($id_token);
+            /**
+             * 開発環境の場合はモックのidToken検証を行う
+             */
+            $verified_id_token = app()->isProduction()
+                ? $auth->verifyIdToken($id_token) : MockIdTokenVerify::verifyIdToken($id_token);
         } catch (\Exception $e) {
             return response(status: 401);
         }
-
-        // dd($verified_id_token->claims(), $verified_id_token->claims()->get('sub'));
 
         $uid = $verified_id_token->claims()->get('sub');
 
@@ -43,7 +47,7 @@ class AuthController extends Controller
         $user->save();
 
         return new JsonResource(
-            $user
+            $user->refresh()
         );
     }
 }

@@ -5,6 +5,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   AuthErrorCodes,
+  connectAuthEmulator,
 } from 'firebase/auth'
 import { ref } from 'vue'
 import firebaseApp from '@/config/firebase';
@@ -12,7 +13,11 @@ import { FirebaseError } from 'firebase/app';
 
 const firebaseUser = ref<User | null>(null);
 const errorText = ref('');
+
 const auth = getAuth(firebaseApp);
+if (import.meta.env.DEV) {
+  connectAuthEmulator(auth, "http://127.0.0.1:9099");
+}
 
 const initUser = () => {
   return new Promise<User | null>((resolve) => {
