@@ -18,7 +18,7 @@ const config = async () => {
 
 export default {
   get: async (endpoint: string = '', options: {
-    headers?: Object,
+    headers?: object,
     params?: string | Record<string, string> | string[][] | URLSearchParams | undefined,
   } = {}) => {
     const { API_PREFIX, defaultHeaders } = await config();
@@ -41,8 +41,8 @@ export default {
   },
 
   post: async (endpoint: string, options: {
-    headers?: Object,
-    data?: Object | string,
+    headers?: object,
+    data?: object | string,
   } = {}) => {
     const { API_PREFIX, defaultHeaders } = await config();
     const { headers, data } = options;
