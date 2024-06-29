@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container md:[width:450px] mx-auto mt-10">
     <a
       class="btn btn-outline btn-primary"
       :href="authorizeURI"
@@ -7,7 +7,13 @@
     >
       マイクラ認証
     </a>
-    <div>{{ userData?.minecraft_gamertag }}</div>
+    <label
+      v-if="userData?.minecraft_uid"
+      class="input input-bordered flex items-center gap-2"
+    >
+      ゲーマータグ
+      <input type="text" class="grow" placeholder="Steve" readonly :value="userData?.minecraft_gamertag" />
+    </label>
   </div>
 </template>
 

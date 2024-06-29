@@ -63,7 +63,7 @@ export const useAuth = () => {
       return true;
     } catch (e) {
       if (e instanceof FirebaseError) {
-        console.log(e.code, AuthErrorCodes.INVALID_LOGIN_CREDENTIALS, e.code === AuthErrorCodes.INVALID_LOGIN_CREDENTIALS);
+
         if (e.code === AuthErrorCodes.INVALID_LOGIN_CREDENTIALS) {
           errorText.value = 'メールアドレスまたはパスワードが間違っています';
         }

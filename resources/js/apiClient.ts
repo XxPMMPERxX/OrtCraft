@@ -5,7 +5,7 @@ const config = async () => {
   const authorization = await firebaseUser.value?.getIdToken() ?? '';
   const API_PREFIX = '/api';
 
-  console.log(firebaseUser.value, authorization)
+
   const defaultHeaders = new Headers({
     "Authorization": authorization,
     "Content-Type": "application/json",

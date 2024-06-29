@@ -1,5 +1,5 @@
 <template>
-  <div data-theme="cupcake" style="height: 100%;">
+  <div data-theme="emerald" style="height: 100%;">
     <Navbar />
     <div class="container mx-auto">
       <RouterView />
@@ -20,7 +20,7 @@ const router = useRouter();
  * ログアウト時にトップに戻るように
  */
 watch(firebaseUser, () => {
-  console.log(firebaseUser.value)
+
   if (!firebaseUser.value) {
     router.push({
       path: '/'

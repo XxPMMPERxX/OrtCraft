@@ -14,6 +14,10 @@ export default {
       "light",
       "dark",
       "cupcake",
+      "nord",
+      "winter",
+      "fantasy",
+      "emerald",
     ],
   },
   plugins: [
