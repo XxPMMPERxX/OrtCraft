@@ -88,6 +88,7 @@ import Tab from '@/components/Tab.vue';
 import { useAuth } from '@/composables/firebaseAuth';
 import apiClient from '@/apiClient';
 import router from '@/router';
+import { loadUserData } from '@/composables/userData';
 
 
 const { firebaseUser, signIn: _signIn, signUp: _signUp, errorText } = useAuth();
@@ -113,7 +114,7 @@ const signIn = async () => {
     isLoading.value = false;
     return;
   }
-  await apiClient.post('/auth');
+  await loadUserData();
   isLoading.value = false;
 
   router.push({
@@ -134,6 +135,7 @@ const signUp = async () => {
   await apiClient.post('/auth', {
     data: { username },
   });
+  await loadUserData();
   isLoading.value = false;
 
   router.push({

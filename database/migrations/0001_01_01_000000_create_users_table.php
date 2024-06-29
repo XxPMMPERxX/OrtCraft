@@ -15,6 +15,8 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name')->nullable()->default('');
             $table->string('firebase_id')->unique();
+            $table->string('minecraft_uid')->nullable();
+            $table->string('minecraft_gamertag')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
