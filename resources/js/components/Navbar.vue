@@ -47,6 +47,7 @@
 import { toSvg } from 'jdenticon';
 import { useAuth } from '@/composables/firebaseAuth';
 import { useUserData } from '@/composables/userData';
+import { computed } from 'vue';
 
 const {
   firebaseUser,
@@ -55,12 +56,13 @@ const {
 
 const appName = import.meta.env.VITE_APP_NAME;
 const userData = useUserData();
-
-const userIcon =
-  userData.value?.icon ?? URL.createObjectURL(
+const userIcon = computed(() => {
+  return userData.value?.icon ?? URL.createObjectURL(
     new Blob(
       [toSvg(userData.value?.id ?? 'ortcraft', 32)],
       { type: 'image/svg+xml' }
     )
   );
+});
+
 </script>

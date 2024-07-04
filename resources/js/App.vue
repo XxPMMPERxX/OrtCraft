@@ -4,6 +4,7 @@
     <div class="container mx-auto">
       <RouterView />
     </div>
+    <ConfirmDialog />
   </div>
 </template>
 
@@ -12,6 +13,7 @@ import { watch } from 'vue';
 import { useRouter } from 'vue-router';
 import Navbar from '@/components/Navbar.vue';
 import { useAuth } from '@/composables/firebaseAuth';
+import ConfirmDialog from './components/dialog/ConfirmDialog.vue';
 
 const { firebaseUser } = useAuth();
 const router = useRouter();

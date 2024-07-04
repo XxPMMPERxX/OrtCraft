@@ -14,14 +14,17 @@
       ゲーマータグ
       <input type="text" class="grow" placeholder="Steve" readonly :value="userData?.minecraft_gamertag" />
     </label>
+
+    <button class="btn" @click="confirm()">確認</button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useAuth } from '@/composables/firebaseAuth';
 import { useRouter } from 'vue-router';
 import authorizeURI from '@/config/mincrosoft';
 import { useUserData } from '@/composables/userData';
+import { useAuth } from '@/composables/firebaseAuth';
+import { confirm as _confirm } from '@/composables/confirmDialog';
 
 const { firebaseUser } = useAuth();
 const userData = useUserData();
@@ -31,5 +34,10 @@ if (!firebaseUser.value) {
   router.replace({
     path: '/'
   });
+}
+
+const confirm = async () => {
+  const result = await _confirm();
+  console.log(result.value);
 }
 </script>
