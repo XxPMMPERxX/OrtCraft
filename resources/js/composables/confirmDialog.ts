@@ -1,21 +1,34 @@
-import { ref, watch, type Ref } from 'vue';
+import { ref, watch } from 'vue';
+
+interface Content {
+  title?: string,
+  body?: string,
+  okLabel?: string,
+  cancelLabel?: string,
+};
 
 const dialogRef = ref<HTMLDialogElement|null>(null);
 const result = ref<null|boolean>(null);
-
-export { dialogRef };
-
-export const confirm = async (): Promise<Ref<null|boolean>> => {
+const content = ref<Content>({
+  okLabel: 'ok',
+  cancelLabel: 'cancel'
+});
+const confirm = async (_content?: Content): Promise<null|boolean> => {
   result.value = null;
   dialogRef.value?.showModal();
+  if (_content) {
+    content.value = { ...content.value, ..._content };
+  }
   return new Promise((resolve) => {
     watch(result, () => {
-      resolve(result);
+      resolve(result.value);
     });
   });
 };
 
-export const close = (_result: boolean = false) => {
+const close = (_result: boolean = false) => {
   dialogRef.value?.close();
   result.value = _result;
-}
+};
+
+export { dialogRef, confirm, close, content };

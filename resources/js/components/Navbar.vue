@@ -10,7 +10,9 @@
 
     <div class="navbar-end">
       <RouterLink :to="{ path: '/auth' }" class="btn btn-ghost btn-circle" v-if="!firebaseUser">
-        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+        <svg class="w-6 h-6 text-gray-800"
+          :class="theme === 'dark' ? 'text-white' : ''"
+          aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
           width="24" height="24" fill="none" viewBox="0 0 24 24">
           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M16 12H4m12 0-4 4m4-4-4-4m3-4h2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-2" />
@@ -44,14 +46,16 @@
   </div>
 </template>
 <script setup lang="ts">
+import { computed } from 'vue';
 import { toSvg } from 'jdenticon';
 import { useAuth } from '@/composables/firebaseAuth';
 import { useUserData } from '@/composables/userData';
-import { computed } from 'vue';
+import { confirm } from '@/composables/confirmDialog';
+import theme from '@/composables/theme';
 
 const {
   firebaseUser,
-  signOut
+  signOut: _signOut
 } = useAuth();
 
 const appName = import.meta.env.VITE_APP_NAME;
@@ -64,5 +68,19 @@ const userIcon = computed(() => {
     )
   );
 });
+
+const signOut = async () => {
+  const result = await confirm({
+    title: 'ログアウト',
+    body: 'ログアウトしてよろしいですか？',
+    okLabel: 'はい',
+    cancelLabel: 'やめる',
+  });
+
+  console.log(result);
+  if (result) {
+    _signOut();
+  }
+};
 
 </script>

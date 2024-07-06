@@ -1,5 +1,5 @@
 <template>
-  <div data-theme="emerald" style="height: 100%;">
+  <div :data-theme="theme" style="height: 100%;">
     <Navbar />
     <div class="container mx-auto">
       <RouterView />
@@ -14,6 +14,7 @@ import { useRouter } from 'vue-router';
 import Navbar from '@/components/Navbar.vue';
 import { useAuth } from '@/composables/firebaseAuth';
 import ConfirmDialog from './components/dialog/ConfirmDialog.vue';
+import theme from './composables/theme';
 
 const { firebaseUser } = useAuth();
 const router = useRouter();
