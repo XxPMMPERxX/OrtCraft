@@ -1,21 +1,21 @@
 import { ref, watch, type Ref } from 'vue';
 
-const active = ref(false);
-const _result = ref(false);
+const dialogRef = ref<HTMLDialogElement|null>(null);
+const result = ref<null|boolean>(null);
 
-export { active };
+export { dialogRef };
 
-export const confirm = async (): Promise<Ref<boolean>> => {
-  active.value = true;
-  _result.value = false;
+export const confirm = async (): Promise<Ref<null|boolean>> => {
+  result.value = null;
+  dialogRef.value?.showModal();
   return new Promise((resolve) => {
-    watch(active, () => {
-      resolve(_result);
+    watch(result, () => {
+      resolve(result);
     });
   });
 };
 
-export const close = (result: boolean = false) => {
-  _result.value = result;
-  active.value = false;
+export const close = (_result: boolean = false) => {
+  dialogRef.value?.close();
+  result.value = _result;
 }
