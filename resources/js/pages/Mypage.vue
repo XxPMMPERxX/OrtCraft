@@ -24,7 +24,7 @@
       <div class="w-full">
         <p class="text-md font-bold">テーマ</p>
         <div class="dropdown w-full">
-          <div tabindex="0" role="button" class="btn btn-neutral m-1 w-full">{{ theme }}</div>
+          <div tabindex="0" role="button" class="btn btn-neutral m-1 w-full uppercase">{{ theme }}</div>
           <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-full p-2 shadow">
             <li v-for="_theme in themes" :key="_theme">
               <a @click="setTheme(_theme)" :class="theme === _theme ? 'bg-accent' : ''">

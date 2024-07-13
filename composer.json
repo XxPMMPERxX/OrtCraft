@@ -9,6 +9,7 @@
         "bigpino67/oauth2-xblive": "dev-master",
         "kreait/laravel-firebase": "^5.8",
         "laravel/framework": "^11.0",
+        "laravel/reverb": "@beta",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9"
     },

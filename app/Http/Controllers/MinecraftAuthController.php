@@ -56,6 +56,8 @@ class MinecraftAuthController extends Controller
             $xasuToken = $provider->getXasuToken($msaToken);
             $xstsToken = $provider->getXstsToken($xasuToken);
 
+            logger($xstsToken->getEncodedOptions());
+
             $profilesProvider = new ProfilesProvider($xstsToken);
             $profile = $profilesProvider->getLoggedUserProfile();
         } catch (Exception $e) {
