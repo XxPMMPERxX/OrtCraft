@@ -43,7 +43,7 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import authorizeURI from '@/config/mincrosoft';
+import authorizeURI from '@/config/microsoft';
 import { useUserData } from '@/composables/userData';
 import { useAuth } from '@/composables/firebaseAuth';
 import theme from '@/composables/theme';

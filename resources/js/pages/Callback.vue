@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import apiClient from '@/apiClient';
+import axios from '@/axios';
 import { loadUserData } from '@/composables/userData';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -14,11 +14,7 @@ const router = useRouter();
 const route = useRoute();
 const { code } =  route.query;
 
-apiClient.post('/minecraft-auth', {
-  data: {
-    code,
-  }
-}).then(() => {
+axios.post('/api/minecraft-auth', { code }).then(() => {
   loadUserData();
   router.replace({
     path: '/mypage',

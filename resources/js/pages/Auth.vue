@@ -83,10 +83,10 @@
 </template>
 
 <script setup lang="ts">
+import axios from '@/axios';
 import { ref } from 'vue';
 import Tab from '@/components/Tab.vue';
 import { useAuth } from '@/composables/firebaseAuth';
-import apiClient from '@/apiClient';
 import router from '@/router';
 import { loadUserData } from '@/composables/userData';
 
@@ -132,9 +132,7 @@ const signUp = async () => {
     isLoading.value = false;
     return;
   }
-  await apiClient.post('/auth', {
-    data: { username },
-  });
+  await axios.post('/api/auth', { username });
   await loadUserData();
   isLoading.value = false;
 

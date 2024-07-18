@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { useAuth } from './firebaseAuth';
-import apiClient from '@/apiClient';
+import axios from '@/axios';
 
 interface UserData {
   id: string,
@@ -14,9 +14,13 @@ const userData = ref<UserData|null>(null);
 const { firebaseUser } = useAuth();
 
 export const loadUserData = async () => {
-  const response = await apiClient.post('/auth');
-  const { data } = await response.json();
-  userData.value = data;
+  try {
+    const response = await axios.post('/api/auth');
+    const { data } = response.data
+    userData.value = data;
+  } catch (e) {
+    //
+  }
 };
 
 export const useUserData = () => {

@@ -20,13 +20,12 @@ const { firebaseUser } = useAuth();
 const router = useRouter();
 
 /**
- * ログアウト時にトップに戻るように
+ * ログアウト時ログイン画面に遷移
  */
 watch(firebaseUser, () => {
-
   if (!firebaseUser.value) {
     router.push({
-      path: '/'
+      path: '/auth'
     });
   }
 });
