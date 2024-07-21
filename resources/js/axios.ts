@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { useAuth } from "@/composables/firebaseAuth";
+import { pushAlert } from "./composables/alert";
 
 axios.interceptors.request.use(async (request) => {
   const { firebaseUser } = useAuth();
@@ -15,6 +16,11 @@ axios.interceptors.response.use(
     const { signOut } = useAuth();
     switch (error.response?.status) {
       case 401:
+        pushAlert({
+          message: '認証エラー: 再度ログインを行なってください',
+          color: 'error',
+          closeable: false,
+        });
         signOut();
         break;
     }
