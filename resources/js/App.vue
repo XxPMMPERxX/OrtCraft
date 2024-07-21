@@ -1,20 +1,22 @@
 <template>
-  <div :data-theme="theme" style="height: 100%;">
+  <div :data-theme="theme" style="height: 100%;position: relative;">
     <Navbar />
     <div class="container mx-auto">
       <RouterView />
     </div>
     <ConfirmDialog />
+    <Altert />
   </div>
 </template>
 
 <script setup>
 import { watch } from 'vue';
 import { useRouter } from 'vue-router';
-import Navbar from '@/components/Navbar.vue';
 import { useAuth } from '@/composables/firebaseAuth';
-import ConfirmDialog from './components/dialog/ConfirmDialog.vue';
 import theme from './composables/theme';
+import ConfirmDialog from './components/dialog/ConfirmDialog.vue';
+import Altert from './components/alert/Altert.vue';
+import Navbar from '@/components/Navbar.vue';
 
 const { firebaseUser } = useAuth();
 const router = useRouter();
