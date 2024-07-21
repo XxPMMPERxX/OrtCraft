@@ -24,6 +24,7 @@ function addAlert() {
     message: 'test',
     color,
     closeable: false,
+    close_at: 10,
   };
   pushAlert(alert);
 }

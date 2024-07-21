@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import { alerts, closeAlert } from '@/composables/alert';
 
-function getAlertColorClass(color: string) {
+function getAlertColorClass(color: string = 'default') {
   let className: string | null | undefined = null;
 
   switch (color) {
@@ -74,7 +74,7 @@ function getAlertColorClass(color: string) {
 .alert-enter-from,
 .alert-leave-to {
   opacity: 0;
-  transform: translateX(30px);
+  transform: translateX(50%);
 }
 
 /* leave する項目をレイアウトフローから外すことで
