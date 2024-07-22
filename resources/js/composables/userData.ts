@@ -15,7 +15,7 @@ const { firebaseUser } = useAuth();
 
 export const loadUserData = async () => {
   try {
-    const response = await axios.post('/api/auth');
+    const response = await axios.get('/api/auth');
     const { data } = response.data
     userData.value = data;
   } catch (e) {

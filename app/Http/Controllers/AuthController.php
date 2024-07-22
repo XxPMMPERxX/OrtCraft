@@ -5,10 +5,11 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Utils\MockIdTokenVerify;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function __invoke(Request $request)
+    public function register(Request $request)
     {
         /** @var \Kreait\Firebase\Auth */
         $auth = app('firebase.auth');
@@ -47,7 +48,15 @@ class AuthController extends Controller
         $user->save();
 
         return new JsonResource(
-            $user->refresh()
+            $user
+        );
+    }
+
+
+    public function auth()
+    {
+        return new JsonResource(
+            Auth::user()
         );
     }
 }

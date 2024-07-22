@@ -132,7 +132,7 @@ const signUp = async () => {
     isLoading.value = false;
     return;
   }
-  await axios.post('/api/auth', { username });
+  await axios.post('/api/user/register', { username });
   await loadUserData();
   isLoading.value = false;
 
