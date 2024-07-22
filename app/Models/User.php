@@ -9,9 +9,11 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
 /**
- * @property string $id
- * @property string $name
- * @property string $firebase_id
+ * @property string  $id
+ * @property string  $name
+ * @property string  $firebase_id
+ * @property ?string $minecraft_uid
+ * @property ?string $minecraft_gamertag
  */
 class User extends Authenticatable
 {
@@ -55,5 +57,18 @@ class User extends Authenticatable
         static::creating(function (User $user) {
             empty($user->id) && $user->id = Str::uuid();
         });
+    }
+
+    public function servers()
+    {
+        return $this->hasMany(Server::class);
+    }
+
+    /**
+     * マイクラが認証済みかどうか
+     */
+    public function getIsVerifiedMinecraftAttribute()
+    {
+        return !is_null($this->minecraft_uid) && !is_null($this->minecraft_gamertag);
     }
 }
