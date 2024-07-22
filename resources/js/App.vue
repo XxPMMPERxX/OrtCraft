@@ -1,12 +1,14 @@
 <template>
-  <div :data-theme="theme" style="height: 100%;position: relative;">
-    <Navbar />
-    <div class="container mx-auto">
-      <RouterView />
+  <Suspense>
+    <div :data-theme="theme" style="height: 100%;position: relative;">
+      <Navbar />
+      <div class="container mx-auto">
+        <RouterView />
+      </div>
+      <ConfirmDialog />
+      <Altert />
     </div>
-    <ConfirmDialog />
-    <Altert />
-  </div>
+  </Suspense>
 </template>
 
 <script setup>
