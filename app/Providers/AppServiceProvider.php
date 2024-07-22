@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Utils\MockIdTokenVerify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
@@ -28,11 +29,12 @@ class AppServiceProvider extends ServiceProvider
             $id_token = $request->headers->get('Authorization');
 
             try {
-                $verified_id_token = $auth->verifyIdToken($id_token);
+                $verified_id_token = app()->isProduction()
+                ? $auth->verifyIdToken($id_token) : MockIdTokenVerify::verifyIdToken($id_token);
             } catch (\Exception $e) {
                 return null;
             }
-            
+
             $uid = $verified_id_token->claims()->get('sub');
             return User::where('firebase_id', $uid)->firstOrFail();
         });

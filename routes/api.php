@@ -10,5 +10,9 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 Route::get('/test', [TestController::class, 'index']);
-Route::post('/auth', AuthController::class);
-Route::post('/minecraft-auth', MinecraftAuthController::class);
+Route::post('/user/register', [AuthController::class, 'register']);
+
+Route::middleware('auth:api')->group(function () {
+    Route::get('/auth', [AuthController::class, 'auth']);
+    Route::post('/minecraft-auth', MinecraftAuthController::class);
+});

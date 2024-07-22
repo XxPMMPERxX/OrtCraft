@@ -12,14 +12,12 @@ use \BigPino67\OAuth2\XBLive\Client\Provider\XBLive;
 use \BigPino67\OAuth2\XBLive\Client\Enum\XboxOneTitleEnum;
 use \BigPino67\OAuth2\XBLive\Client\Token\AccessToken;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class MinecraftAuthController extends Controller
 {
     public function __invoke(Request $request)
     {
-        /** @var \Kreait\Firebase\Auth */
-        $auth = app('firebase.auth');
-        $id_token = $request->headers->get('Authorization');
         $code = $request->code ?? null;
         if (!$code) {
             return response(status: 400);
@@ -31,22 +29,6 @@ class MinecraftAuthController extends Controller
             'redirectUri'       => env('AZURE_REDIRECT_URI'),
             'logoutRedirectUri' => '',
         ]);
-
-        try {
-            /**
-             * 開発環境の場合はモックのidToken検証を行う
-             */
-            $verified_id_token = app()->isProduction()
-                ? $auth->verifyIdToken($id_token) : MockIdTokenVerify::verifyIdToken($id_token);
-        } catch (\Exception $e) {
-            return response(status: 401);
-        }
-
-        $uid = $verified_id_token->claims()->get('sub');
-
-        if (!$uid) {
-            return response(status: 401);
-        }
 
         try {
             $msaToken = $provider->GetAccessToken('authorization_code', [
@@ -68,13 +50,13 @@ class MinecraftAuthController extends Controller
         $gamertag = $profile->getSettings()->getGamertag();
 
         /** @var User */
-        $user = User::where('firebase_id', $uid)->firstOrFail();
+        $user = Auth::user();
         $user->minecraft_uid = $minecrafUid;
         $user->minecraft_gamertag = $gamertag;
         $user->save();
 
         return new JsonResource(
-            $user->refresh()
+            $user
         );
     }
 }
