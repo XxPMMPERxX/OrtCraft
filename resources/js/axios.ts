@@ -24,6 +24,8 @@ axios.interceptors.response.use(
         signOut();
         break;
     }
+
+    return Promise.reject(error);
   }
 );
 
