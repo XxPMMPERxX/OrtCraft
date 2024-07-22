@@ -4,13 +4,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Utils\MockIdTokenVerify;
-
-
 use \BigPino67\OAuth2\XBLive\Client\Provider\Profiles\ProfilesProvider;
 use \BigPino67\OAuth2\XBLive\Client\Provider\XBLive;
-use \BigPino67\OAuth2\XBLive\Client\Enum\XboxOneTitleEnum;
-use \BigPino67\OAuth2\XBLive\Client\Token\AccessToken;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -37,8 +32,6 @@ class MinecraftAuthController extends Controller
             ]);
             $xasuToken = $provider->getXasuToken($msaToken);
             $xstsToken = $provider->getXstsToken($xasuToken);
-
-            logger($xstsToken->getEncodedOptions());
 
             $profilesProvider = new ProfilesProvider($xstsToken);
             $profile = $profilesProvider->getLoggedUserProfile();
