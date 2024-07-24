@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AuthUserResource;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -47,7 +48,7 @@ class AuthController extends Controller
 
         $user->save();
 
-        return new JsonResource(
+        return new AuthUserResource(
             $user
         );
     }
@@ -55,7 +56,7 @@ class AuthController extends Controller
 
     public function auth()
     {
-        return new JsonResource(
+        return new AuthUserResource(
             Auth::user()
         );
     }
