@@ -51,7 +51,6 @@ class User extends Authenticatable
         ];
     }
 
-    //ここから追記
     protected static function booted()
     {
         static::creating(function (User $user) {
@@ -61,7 +60,11 @@ class User extends Authenticatable
 
     public function servers()
     {
-        return $this->hasMany(Server::class);
+        return $this->belongsToMany(Server::class, 'server_members')
+            ->withTimestamps()
+            ->withPivot([
+                'user_role'
+            ]);
     }
 
     /**

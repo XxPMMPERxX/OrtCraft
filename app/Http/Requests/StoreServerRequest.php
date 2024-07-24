@@ -34,7 +34,7 @@ class StoreServerRequest extends FormRequest
             'address',
             'port',
             'description',
-            'types',
+            'platform',
             'tags',
         ]);
     }
