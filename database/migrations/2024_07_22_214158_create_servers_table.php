@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('servers', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('user_id')->comment('サーバーのオーナーのID');
 
-            $table->string('types')->nullable()->default('')->comment('サーバの対象プラットフォーム');
+            $table->string('name')->comment('サーバ名');
             $table->string('address')->comment('サーバのIP');
             $table->integer('port', false, true)->comment('サーバーのポート');
             $table->text('description')->nullable()->comment('サーバの説明');
+            $table->string('platform')->nullable()->default('')->comment('サーバの対象プラットフォーム');
+            $table->string('tags')->nullable()->default('')->comment('サーバのタグ');
 
             $table->datetimes();
         });

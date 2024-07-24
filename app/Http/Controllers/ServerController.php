@@ -6,7 +6,6 @@ use App\Http\Requests\StoreServerRequest;
 use App\Models\Server;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use App\Facades\Auth;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 
@@ -26,10 +25,12 @@ class ServerController extends Controller
     public function store(StoreServerRequest $request)
     {
         DB::transaction(function () use ($request) {
-            // ユーザに紐付けて作成
-            Auth::user()->servers()->create(
+            // サーバを作成
+            $server = Server::register(
                 $request->onlyFillable()
             );
+
+            return new JsonResource($server);
         });
     }
 
