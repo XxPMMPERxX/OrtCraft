@@ -36,7 +36,15 @@ class AppServiceProvider extends ServiceProvider
             }
 
             $uid = $verified_id_token->claims()->get('sub');
-            return User::where('firebase_id', $uid)->firstOrFail();
+
+            /** @var \App\Models\User */
+            $user = User::where('firebase_id', $uid)->firstOrFail();
+            /**
+             * firebaseのクレームを付与
+             */
+            $user->setAttribute('firebase_claims', $verified_id_token->claims());
+
+            return $user;
         });
     }
 }
