@@ -7,14 +7,13 @@ use App\Enums\ServerMemberRole;
 use App\Facades\Auth;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class Server extends Model
 {
     use HasFactory;
-
-    protected $keyType = 'string';
+    use HasUuids;
 
     protected $fillable = [
         'name',
@@ -28,13 +27,6 @@ class Server extends Model
     protected $casts = [
         'tags' => Split::class,
     ];
-
-    protected static function booted()
-    {
-        static::creating(function (Server $server) {
-            empty($server->id) && $server->id = Str::uuid();
-        });
-    }
 
     /**
      * @return BelongsToMany
