@@ -42,7 +42,7 @@ class AppServiceProvider extends ServiceProvider
             /**
              * firebaseのクレームを付与
              */
-            $user->setAttribute('firebase_claims', $verified_id_token->claims());
+            $user->firebase_claims = $verified_id_token->claims();
 
             return $user;
         });

@@ -39,6 +39,11 @@ class User extends Authenticatable
     ];
 
     /**
+     * firebaseのトークンから得たユーザの情報
+     */
+    public $firebase_claims = null;
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
