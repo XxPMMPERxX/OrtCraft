@@ -16,7 +16,9 @@ class ServerController extends Controller
      */
     public function index(Request $request)
     {
-        return new ResourceCollection(Server::search($request->all()));
+        return new ResourceCollection(
+            Server::search($request->all())->get()
+        );
     }
 
     /**
@@ -24,7 +26,7 @@ class ServerController extends Controller
      */
     public function store(StoreServerRequest $request)
     {
-        DB::transaction(function () use ($request) {
+        return DB::transaction(function () use ($request) {
             // サーバを作成
             $server = Server::register(
                 $request->onlyFillable()

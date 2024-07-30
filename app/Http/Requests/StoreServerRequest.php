@@ -32,7 +32,8 @@ class StoreServerRequest extends FormRequest
         return $this->only([
             'name',
             'address',
-            'port',
+            'je_port',
+            'be_port',
             'description',
             'platform',
             'tags',

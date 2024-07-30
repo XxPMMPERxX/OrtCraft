@@ -6,7 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 /**
  * @property string  $id
@@ -17,9 +17,7 @@ use Illuminate\Support\Str;
  */
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
-
-    protected $keyType = 'string';
+    use HasFactory, Notifiable, HasUuids;
 
     /**
      * The attributes that are mass assignable.
@@ -41,6 +39,11 @@ class User extends Authenticatable
     ];
 
     /**
+     * firebaseのトークンから得たユーザの情報
+     */
+    public $firebase_claims = null;
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -49,13 +52,6 @@ class User extends Authenticatable
     {
         return [
         ];
-    }
-
-    protected static function booted()
-    {
-        static::creating(function (User $user) {
-            empty($user->id) && $user->id = Str::uuid();
-        });
     }
 
     public function servers()
