@@ -18,7 +18,8 @@ class Server extends Model
     protected $fillable = [
         'name',
         'address',
-        'port',
+        'je_port',
+        'be_port',
         'description',
         'platform',
         'tags',
@@ -52,8 +53,17 @@ class Server extends Model
         $server = self::create($attributes);
 
         // 作成時のユーザーをオーナにセットする
-        $server->members()->attach(Auth::user(), ['user_role' => ServerMemberRole::Owner]);
+        $server->members()->attach(Auth::user(), ['user_role' => ServerMemberRole::OWNER]);
 
         return $server;
+    }
+
+
+    public static function search(array $params)
+    {
+        $query = self::query();
+        $query->orderBy('id', 'DESC');
+
+        return $query;
     }
 }
