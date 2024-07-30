@@ -1,6 +1,6 @@
 <template>
   <Suspense>
-    <div :data-theme="theme" style="height: 100%;position: relative;">
+    <div>
       <Navbar />
       <div class="container mx-auto">
         <RouterView />
@@ -32,5 +32,13 @@ watch(firebaseUser, () => {
       path: '/auth'
     });
   }
+});
+
+// テーマ更新毎にセット
+watch(theme, () => {
+  document.querySelector('html').dataset.theme = theme.value;
+},
+{
+  immediate: true,
 });
 </script>
