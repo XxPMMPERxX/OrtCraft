@@ -77,7 +77,6 @@ const signOut = async () => {
     cancelLabel: 'やめる',
   });
 
-  console.log(result);
   if (result) {
     _signOut();
   }

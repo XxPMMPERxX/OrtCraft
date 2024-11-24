@@ -38,7 +38,6 @@ const pushAlert = ({ message, color = 'default', closeable = false, close_at = 0
 
   // 閉じるボタン非表示かつ、閉じる秒数も設定されていない場合は、強制的に5秒後に削除
   if (!closeable && !close_at) {
-    console.log('test');
     close_at = 5;
   }
 

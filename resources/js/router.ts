@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import TopPage from './pages/Top.vue';
-import AuthPage from './pages/Auth.vue';
-import CallbackPage from './pages/Callback.vue';
-import MyPage from './pages/Mypage.vue';
+import AuthPage from './pages/auth/Auth.vue';
+import CallbackPage from './pages/callback/Callback.vue';
+import MyPage from './pages/mypage/Mypage.vue';
 
 const routes = [
   {
@@ -20,7 +20,7 @@ const routes = [
   {
     path: '/callback',
     component: CallbackPage,
-  }
+  },
 ];
 const router = createRouter({
   routes,

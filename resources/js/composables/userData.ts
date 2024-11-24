@@ -6,6 +6,7 @@ interface UserData {
   id: string,
   icon: string,
   name: string,
+  is_verified_minecraft: boolean,
   minecraft_uid: string | null,
   minecraft_gamertag: string | null,
 };

@@ -22,15 +22,12 @@ class AuthUserResource extends JsonResource
             'is_verified_minecraft',
         ]);
 
-        $user->load('servers');
-
         $user->setVisible([
             'id',
             'is_verified_minecraft',
             'minecraft_gamertag',
             'minecraft_uid',
             'name',
-            'servers'
         ]);
 
         return parent::toArray($request);
