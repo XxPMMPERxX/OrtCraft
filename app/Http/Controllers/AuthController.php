@@ -1,56 +1,42 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\AuthUserResource;
-use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Http\Resources\Json\JsonResource;
-use App\Utils\MockIdTokenVerify;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(StoreUserRequest $request)
     {
-        /** @var \Kreait\Firebase\Auth */
-        $auth = app('firebase.auth');
-        $id_token = $request->headers->get('Authorization');
+        return DB::transaction(function () use ($request) {
+                /** @var \Kreait\Firebase\Auth */
+            $auth = app('firebase.auth');
 
+            try {
+                $firebaseUser = $auth->getUserByEmail($request->email);
+                if (!$firebaseUser->emailVerified) {
+                    $auth->deleteUser($firebaseUser->uid);
+                }
+            } catch (\Exception $e) {
+                //
+            }
 
-        try {
-            /**
-             * 開発環境の場合はモックのidToken検証を行う
-             */
-            $verified_id_token = app()->isProduction()
-                ? $auth->verifyIdToken($id_token) : MockIdTokenVerify::verifyIdToken($id_token);
-        } catch (\Exception $e) {
-            return response(status: 401);
-        }
+            $firebaseUser = $auth->createUserWithEmailAndPassword($request->email, $request->password);
 
-        $uid = $verified_id_token->claims()->get('sub');
+            /** @var User */
+            $user = User::firstOrNew([
+                'firebase_id' => $firebaseUser->uid
+            ]);
+            $user->name = $request->username;
+            $user->save();
 
-        if (!$uid) {
-            return response(status: 401);
-        }
-
-        // $name = $verified_id_token->claims()->get('name');
-        $name = $request->username ?? '名無しの権平';
-
-        /** @var User */
-        $user = User::firstOrNew([
-            'firebase_id' => $uid
-        ]);
-
-        /** 新規ユーザの場合は name をセット */
-        if (!$user->name) {
-            $user->name = $name;
-        }
-
-        $user->save();
-
-        return new AuthUserResource(
-            $user
-        );
+            return new AuthUserResource(
+                $user
+            );
+        });
     }
 
 

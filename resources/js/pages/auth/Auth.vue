@@ -83,13 +83,12 @@
 </template>
 
 <script setup lang="ts">
-import axios from '@/axios';
 import { ref } from 'vue';
 import Tab from '@/components/Tab.vue';
 import { useAuth } from '@/composables/firebaseAuth';
 import router from '@/router';
 import { loadUserData } from '@/composables/userData';
-
+import { pushAlert } from '@/composables/alert';
 
 const { firebaseUser, signIn: _signIn, signUp: _signUp, errorText } = useAuth();
 const isLoading = ref(false);
@@ -125,20 +124,25 @@ const signIn = async () => {
 const signUp = async () => {
   const { username, email, password } = input.value;
 
-  isLoading.value = true;
-  const result = await _signUp(email, password);
+  try {
+    isLoading.value = true;
+    await _signUp(username, email, password);
 
-  if (!result) {
+    pushAlert({
+      message: '認証メールを送信しました。メール内のリンクをクリックして認証を完了してください。',
+      color: 'success',
+      close_at: 5,
+    });
+  } catch (e) {
+    //
+  } finally {
+    input.value = {
+      username: '',
+      email: '',
+      password: '',
+    };
     isLoading.value = false;
-    return;
   }
-  await axios.post('/api/user/register', { username });
-  await loadUserData();
-  isLoading.value = false;
 
-  router.push({
-    path: '/'
-  });
 }
-
 </script>

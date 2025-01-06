@@ -27,7 +27,7 @@ if (code) {
     pushAlert({
       message: 'マインクラフトの認証に失敗しました。時間を空けて再度お確かめください。',
       color: 'error',
-      closeable: true,
+      close_at: 5,
     });
   }).finally(() => {
     router.replace({

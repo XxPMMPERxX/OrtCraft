@@ -9,6 +9,9 @@ use \BigPino67\OAuth2\XBLive\Client\Provider\XBLive;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * 統合版マイクラの認証を行うコントローラ
+ */
 class MinecraftAuthController extends Controller
 {
     public function __invoke(Request $request)
@@ -30,6 +33,7 @@ class MinecraftAuthController extends Controller
                 'scope' => $provider->scope,
                 'code' => $code,
             ]);
+
             $xasuToken = $provider->getXasuToken($msaToken);
             $xstsToken = $provider->getXstsToken($xasuToken);
 
@@ -44,8 +48,8 @@ class MinecraftAuthController extends Controller
 
         /** @var User */
         $user = Auth::user();
-        $user->minecraft_uid = $minecrafUid;
-        $user->minecraft_gamertag = $gamertag;
+        $user->minecraft_be_uid = $minecrafUid;
+        $user->minecraft_be_gamertag = $gamertag;
         $user->save();
 
         return new JsonResource(

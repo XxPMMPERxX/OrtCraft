@@ -3,12 +3,11 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
-class StoreServerRequest extends FormRequest
+class StoreUserRequest extends FormRequest
 {
     /**
-     * マイクラ認証が済んでいる場合のみ、サーバ登録を可能にする
+     * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
@@ -23,10 +22,9 @@ class StoreServerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
-            'address' => 'required',
-            'je_port' => 'required_if:be_port,null',
-            'be_port' => 'required_if:je_port,null',
+            'username' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'password' => ['required', 'string', 'min:8'],
         ];
     }
 }

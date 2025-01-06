@@ -1,7 +1,6 @@
 <template>
   <button
-    class="btn btn-primary text-white w-full h-20"
-    :disabled="props.disabled"
+    class="btn btn-primary mt-5 text-white w-full h-20"
     @click="active = true"
   >
     サーバーを登録する
@@ -18,46 +17,7 @@
     </ul>
 
     <div>
-      <div class="flex my-5 gap-3 md:gap-10 justify-center">
-        <label class="flex gap-1 md:gap-2 items-center cursor-pointer">
-          <input
-            v-model="input.platform"
-            :value="SERVER_PLATFORM_TYPE.JAVA.value"
-            type="radio"
-            name="platform"
-            class="radio radio-xs"
-          />
-          <span>
-            {{ SERVER_PLATFORM_TYPE.JAVA.label }}
-          </span>
-        </label>
-        <label class="flex gap-1 md:gap-2 items-center cursor-pointer">
-          <input
-            v-model="input.platform"
-            :value="SERVER_PLATFORM_TYPE.BE.value"
-            type="radio"
-            name="platform"
-            class="radio radio-xs"
-          />
-          <span>
-            {{ SERVER_PLATFORM_TYPE.BE.label }}
-          </span>
-        </label>
-        <label class="flex gap-1 md:gap-2 items-center cursor-pointer">
-          <input
-            v-model="input.platform"
-            :value="SERVER_PLATFORM_TYPE.JAVA_BE.value"
-            type="radio"
-            name="platform"
-            class="radio radio-xs"
-          />
-          <span>
-            {{ SERVER_PLATFORM_TYPE.JAVA_BE.label }}
-          </span>
-        </label>
-      </div>
-
-      <div class="flex flex-col gap-2">
+      <div class="mt-5 flex flex-col gap-2">
         <input
           v-model="input.name"
           class="input input-bordered w-full"
@@ -99,12 +59,7 @@
 import { ref } from 'vue';
 import axios from '@/axios';
 import Dialog from '@/components/dialog/Dialog.vue';
-import { SERVER_PLATFORM_TYPE } from '@/enums';
 import { pushAlert } from '@/composables/alert';
-
-const props = defineProps<{
-  disabled: boolean,
-}>();
 
 const emit = defineEmits(['registerd:server']);
 
@@ -115,7 +70,6 @@ const active = defineModel({
 const inputDefault = {
   name: '',
   address: '',
-  platform: SERVER_PLATFORM_TYPE.JAVA.value,
   je_port: null,
   be_port: null,
 };

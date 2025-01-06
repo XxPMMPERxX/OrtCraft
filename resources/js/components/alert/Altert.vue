@@ -1,7 +1,7 @@
 <template>
-  <transition-group name="alert" tag="ul" class="alert-wrapper md:w-1/2 w-full">
+  <transition-group name="alert" tag="ul" class="alert-wrapper md:w-1/3 w-full">
     <li v-for="alert in alerts" :key="alert.key" class="my-2 w-full">
-      <div role="alert" class="alert flex justify-between" :class="getAlertColorClass(alert.color)" >
+      <div role="alert" class="alert flex justify-between opacity-60 hover:opacity-100" :class="getAlertColorClass(alert.color)" >
         <div class="flex gap-1.5 items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -14,7 +14,7 @@
               stroke-width="2"
               d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
-          <span>
+          <span class="text-left">
             {{ alert.message }}
           </span>
         </div>
@@ -57,7 +57,7 @@ function getAlertColorClass(color: string = 'default') {
 
 <style>
 .alert-wrapper {
-  position: absolute;
+  position: fixed;
   right: 0;
   bottom: 0;
   z-index: 1000000;

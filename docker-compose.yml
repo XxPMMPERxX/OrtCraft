@@ -111,8 +111,10 @@ services:
         - 9099:9099 # Firebase Authentication
         - 4000:4000 # Emulator Suite UI
         working_dir: /opt/firebase
-        command: firebase emulators:start
+        command: firebase emulators:start --import data --export-on-exit
         tty: true
+        networks:
+            - sail
 networks:
     sail:
         driver: bridge

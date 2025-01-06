@@ -2,7 +2,6 @@ import {
   getAuth,
   signOut as firebaseSignOut,
   type User,
-  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   AuthErrorCodes,
   connectAuthEmulator,
@@ -10,6 +9,7 @@ import {
 import { ref } from 'vue'
 import firebaseApp from '@/config/firebase';
 import { FirebaseError } from 'firebase/app';
+import axios from '@/axios';
 
 const firebaseUser = ref<User | null>(null);
 const errorText = ref('');
@@ -35,20 +35,13 @@ auth.onAuthStateChanged((user) => {
 
 export const useAuth = () => {
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (username: string, email: string, password: string) => {
     errorText.value = '';
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      firebaseUser.value = userCredential.user;
-      return true;
-    } catch (e) {
-      await signOut();
-      return false;
-    }
+    await axios.post('/api/user/register', {
+      username,
+      email,
+      password,
+    });
   }
 
   const signIn = async (email: string, password: string) => {

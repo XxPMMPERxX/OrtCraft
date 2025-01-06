@@ -7,12 +7,14 @@ interface UserData {
   icon: string,
   name: string,
   is_verified_minecraft: boolean,
-  minecraft_uid: string | null,
-  minecraft_gamertag: string | null,
+  minecraft_be_uid: string | null,
+  minecraft_be_gamertag: string | null,
+  minecraft_java_uid: string | null,
+  minecraft_java_gamertag: string | null,
 };
 
 const userData = ref<UserData|null>(null);
-const { firebaseUser } = useAuth();
+const { firebaseUser, signOut } = useAuth();
 
 export const loadUserData = async () => {
   try {
@@ -20,7 +22,7 @@ export const loadUserData = async () => {
     const { data } = response.data
     userData.value = data;
   } catch (e) {
-    //
+    signOut();
   }
 };
 

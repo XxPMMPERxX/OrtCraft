@@ -12,8 +12,10 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
  * @property string  $id
  * @property string  $name
  * @property string  $firebase_id
- * @property ?string $minecraft_uid
- * @property ?string $minecraft_gamertag
+ * @property ?string $minecraft_be_uid
+ * @property ?string $minecraft_be_gamertag
+ * @property ?string $minecraft_java_uid
+ * @property ?string $minecraft_java_gamertag
  */
 class User extends Authenticatable
 {
@@ -61,13 +63,5 @@ class User extends Authenticatable
             ->withPivot([
                 'user_role'
             ]);
-    }
-
-    /**
-     * マイクラが認証済みかどうか
-     */
-    public function getIsVerifiedMinecraftAttribute()
-    {
-        return !is_null($this->minecraft_uid) && !is_null($this->minecraft_gamertag);
     }
 }

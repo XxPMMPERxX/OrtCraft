@@ -3,6 +3,7 @@ import TopPage from './pages/Top.vue';
 import AuthPage from './pages/auth/Auth.vue';
 import CallbackPage from './pages/callback/Callback.vue';
 import MyPage from './pages/mypage/Mypage.vue';
+import Dashbord from './pages/server/Dashbord.vue';
 
 const routes = [
   {
@@ -20,6 +21,11 @@ const routes = [
   {
     path: '/callback',
     component: CallbackPage,
+  },
+  {
+    path: '/server/:id/dashboard',
+    component: Dashbord,
+    props: true,
   },
 ];
 const router = createRouter({

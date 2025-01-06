@@ -18,15 +18,12 @@ class AuthUserResource extends JsonResource
         /** @var User */
         $user = $this->resource;
 
-        $user->append([
-            'is_verified_minecraft',
-        ]);
-
         $user->setVisible([
             'id',
-            'is_verified_minecraft',
-            'minecraft_gamertag',
-            'minecraft_uid',
+            'minecraft_be_gamertag',
+            'minecraft_be_uid',
+            'minecraft_java_gamertag',
+            'minecraft_java_uid',
             'name',
         ]);
 

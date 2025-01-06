@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreServerRequest;
+use App\Http\Resources\ServerResource;
 use App\Models\Server;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -16,8 +17,10 @@ class ServerController extends Controller
      */
     public function index(Request $request)
     {
-        return new ResourceCollection(
-            Server::search($request->all())->get()
+        return ServerResource::collection(
+            Server::search(
+                $request->all()
+            )->get()
         );
     }
 
@@ -29,8 +32,12 @@ class ServerController extends Controller
         return DB::transaction(function () use ($request) {
             // サーバを作成
             $server = Server::register(
-                $request->onlyFillable()
+                $request->validated()
             );
+
+            $server->makeVisible([
+                'auth_code',
+            ]);
 
             return new JsonResource($server);
         });

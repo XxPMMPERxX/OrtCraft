@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Support\Str;
 
 class Server extends Model
 {
@@ -21,12 +22,15 @@ class Server extends Model
         'je_port',
         'be_port',
         'description',
-        'platform',
         'tags',
     ];
 
     protected $casts = [
         'tags' => Split::class,
+    ];
+
+    protected $hidden = [
+        'auth_code',
     ];
 
     /**
@@ -51,6 +55,7 @@ class Server extends Model
          * @var static
          */
         $server = self::create($attributes);
+        $server->setAuthCode();
 
         // 作成時のユーザーをオーナにセットする
         $server->members()->attach(Auth::user(), ['user_role' => ServerMemberRole::OWNER]);
@@ -58,10 +63,27 @@ class Server extends Model
         return $server;
     }
 
+    /**
+     * 認証コードを生成して保存
+     */
+    public function setAuthCode()
+    {
+        $authCode = Str::random(10);
+        $this->auth_code = $authCode;
+        $this->save();
+    }
+
 
     public static function search(array $params)
     {
         $query = self::query();
+
+        if (!empty($params['only_own'])) {
+            $query->whereHas('members', function ($query) {
+                $query->where('user_id', Auth::id());
+            });
+        }
+
         $query->orderBy('id', 'DESC');
 
         return $query;
