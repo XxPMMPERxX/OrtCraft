@@ -2,14 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\NotificationType;
 use App\Enums\ServerPlatformType;
+use App\Facades\Auth;
+use App\Http\Resources\NotificationResource;
+use App\Models\User;
+use App\Notifications\FriendRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
+
+    public function index(Request $request)
+    {
+        return new ResourceCollection(
+            User::search($request->all())
+                ->get()
+                ->filter(function (User $user) {
+                    // メール認証がまだのユーザは出さない
+                    return $user->firebaseUser?->emailVerified;
+                })
+        );
+    }
+
+    /**
+     * マイクラ連携を解除
+     */
     public function cancelAuth(Request $request)
     {
         DB::transaction(function () use ($request) {
@@ -32,5 +54,74 @@ class UserController extends Controller
                 $user
             );
         });
+    }
+
+
+    public function sendFriendRequest(Request $request)
+    {
+        return DB::transaction(function () use ($request) {
+            $to = $request->to;
+
+            if (!$to) {
+                return response()->json([], 400);
+            }
+
+            $to = User::findOrFail($to);
+
+            $to->notify(
+                new FriendRequest($to)
+            );
+        });
+    }
+
+
+    public function approveFriendRequest(Request $request)
+    {
+        return DB::transaction(function () use ($request) {
+            $user = Auth::user();
+
+            $notificationId = $request->notificationId;
+
+            /** @var DatabaseNotification */
+            $notification = $user->notifications()->findOrFail($notificationId);
+
+            if ($notification->type !== NotificationType::FriendRequest->value) {
+                return response()->json([], 400);
+            }
+
+            /** @var array{title:string, sender_id:string, receiver_id:string} */
+            $data = $notification->data;
+
+            if ($data['receiver_id'] !== $user->id) {
+                return response()->json([], 403);
+            }
+
+            DB::table('friends')
+                ->insert([
+                    [
+                        'user_id_1' => $data['sender_id'],
+                        'user_id_2' => $data['receiver_id'],
+                    ],
+                    [
+                        'user_id_1' => $data['receiver_id'],
+                        'user_id_2' => $data['sender_id'],
+                    ],
+                ]);
+        });
+    }
+
+
+    public function getFriends()
+    {
+        return new ResourceCollection(Auth::user()->friends);
+    }
+
+
+    public function getNotifications(Request $request)
+    {
+        return NotificationResource::collection(
+            Auth::user()->notifications()
+                ->paginate($request->items_per_page ?? -1)
+        );
     }
 }

@@ -6,6 +6,7 @@
         <RouterView />
       </div>
       <ConfirmDialog />
+      <NotificationListDialog />
       <Altert />
     </div>
   </Suspense>
@@ -19,7 +20,12 @@ import theme from './composables/theme';
 import ConfirmDialog from './components/dialog/ConfirmDialog.vue';
 import Altert from './components/alert/Altert.vue';
 import Navbar from '@/components/Navbar.vue';
+import { useUserData } from './composables/userData';
+import { pushAlert } from './composables/alert';
+import NotificationListDialog from './components/dialog/NotificationListDialog.vue';
+import useNotificationDialog from './composables/useNotificationDialog';
 
+const userData = useUserData();
 const { firebaseUser } = useAuth();
 const router = useRouter();
 
@@ -28,11 +34,37 @@ const router = useRouter();
  */
 watch(firebaseUser, () => {
   if (!firebaseUser.value) {
+    userData.value = null;
     router.push({
       path: '/auth'
     });
   }
 });
+
+watch(userData, async () => {
+  if (userData.value) {
+    window.Echo.connector.options.auth.headers.Authorization = await firebaseUser.value.getIdToken();
+
+    window.Echo.private(`App.Models.User.${userData.value.id}`)
+      .notification((notification) => {
+        console.log(notification);
+        pushAlert({
+          message: notification.title,
+          color: 'info',
+          close_at: 10,
+          onClick: () => {
+            const {
+              open: openNotifications,
+            } = useNotificationDialog();
+
+            openNotifications(notification.id)
+          },
+        });
+      });
+  } else {
+    window.Echo.leaveAllChannels();
+  }
+}, { immediate: true });
 
 // テーマ更新毎にセット
 watch(theme, () => {

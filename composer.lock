@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d34cd8eac3e43715ec85d5e82604972e",
+    "content-hash": "84caddfd982696b0b1aa8fd6172741f4",
     "packages": [
         {
             "name": "beste/clock",
@@ -8221,6 +8221,57 @@
                 "source": "https://github.com/tijsverkoyen/CssToInlineStyles/tree/v2.2.7"
             },
             "time": "2023-12-08T13:03:43+00:00"
+        },
+        {
+            "name": "usarise/identicon",
+            "version": "0.8.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/usarise/identicon-php.git",
+                "reference": "7b7884f5852587faa602d2d2d65921757921125a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/usarise/identicon-php/zipball/7b7884f5852587faa602d2d2d65921757921125a",
+                "reference": "7b7884f5852587faa602d2d2d65921757921125a",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "ergebnis/composer-normalize": "^2.43.0",
+                "friendsofphp/php-cs-fixer": "^3.64.0",
+                "phpstan/phpstan": "^1.12.2",
+                "phpunit/phpunit": "^10.5.32",
+                "rector/rector": "^1.2.4"
+            },
+            "suggest": {
+                "ext-gd": "to use the GD driver",
+                "ext-imagick": "to use the Imagick driver"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Usarise\\Identicon\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Unlicense"
+            ],
+            "description": "A PHP library for generating identicons.",
+            "keywords": [
+                "avatar",
+                "avatar generator",
+                "identicon",
+                "identicon generator"
+            ],
+            "support": {
+                "issues": "https://github.com/usarise/identicon-php/issues",
+                "source": "https://github.com/usarise/identicon-php/tree/0.8.2"
+            },
+            "time": "2024-09-07T14:02:58+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

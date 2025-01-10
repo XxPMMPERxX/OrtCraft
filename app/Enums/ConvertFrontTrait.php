@@ -15,7 +15,7 @@ trait ConvertFrontTrait
             return [
                 Str::upper($case->name) => [
                     'name' => $case->name,
-                    'value' => $case->value,
+                    'value' => addcslashes($case->value, '\\'),
                     'label' => $case->label(),
                 ],
             ];

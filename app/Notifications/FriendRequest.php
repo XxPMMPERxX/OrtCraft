@@ -2,9 +2,11 @@
 
 namespace App\Notifications;
 
+use App\Enums\NotificationType;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Channels\BroadcastChannel;
+use Illuminate\Notifications\Channels\DatabaseChannel;
 use Illuminate\Notifications\Notification;
 
 class FriendRequest extends Notification
@@ -14,9 +16,11 @@ class FriendRequest extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct(protected User $to, protected ?User $from = null)
     {
-        //
+        if (is_null($this->from)) {
+            $this->from = auth()->user();
+        }
     }
 
     /**
@@ -26,18 +30,10 @@ class FriendRequest extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
-    }
-
-    /**
-     * Get the mail representation of the notification.
-     */
-    public function toMail(object $notifiable): MailMessage
-    {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+        return [
+            DatabaseChannel::class,
+            BroadcastChannel::class,
+        ];
     }
 
     /**
@@ -48,7 +44,9 @@ class FriendRequest extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            //
+            'title' => "{$this->from->name} さんから友達リクエストが届いています",
+            'sender_id' => $this->from->id,
+            'receiver_id' => $this->to->id,
         ];
     }
 }

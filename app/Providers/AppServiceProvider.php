@@ -22,7 +22,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-
         DB::listen(static function (QueryExecuted $event) {
             $sql = $event->connection
                 ->getQueryGrammar()

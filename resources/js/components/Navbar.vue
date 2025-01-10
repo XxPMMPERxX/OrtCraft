@@ -9,11 +9,15 @@
     </div>
 
     <div class="navbar-end">
-      <button v-if="firebaseUser" class="btn btn-sm btn-ghost btn-circle mr-5 w-10 h-10">
+      <button
+        v-if="firebaseUser" class="btn btn-sm btn-ghost btn-circle mr-5 w-10 h-10"
+        @click="openNotifications()"
+      >
         <div class="indicator">
           <span class="indicator-item badge badge-primary badge-xs"></span>
           <svg class="h-6 w-6"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
+            <path stroke="none" d="M0 0h24v24H0z"/>
+            <path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
             <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
           </svg>
         </div>
@@ -34,7 +38,8 @@
           <div class="w-10 rounded-full">
             <img
               alt="User Icon"
-              :src="userIcon" />
+              :src="`storage/${userData?.icon_path}`"
+            />
           </div>
         </div>
         <ul
@@ -55,13 +60,13 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
-import { computed } from 'vue';
-import { toSvg } from 'jdenticon';
 import { useAuth } from '@/composables/firebaseAuth';
 import { useUserData } from '@/composables/userData';
 import { confirm } from '@/composables/confirmDialog';
 import theme from '@/composables/theme';
+import useNotificationDialog from '@/composables/useNotificationDialog';
 
 const {
   firebaseUser,
@@ -70,14 +75,6 @@ const {
 
 const appName = import.meta.env.VITE_APP_NAME;
 const userData = useUserData();
-const userIcon = computed(() => {
-  return userData.value?.icon ?? URL.createObjectURL(
-    new Blob(
-      [toSvg(userData.value?.id ?? 'ortcraft', 32)],
-      { type: 'image/svg+xml' }
-    )
-  );
-});
 
 const signOut = async () => {
   const result = await confirm({
@@ -91,5 +88,9 @@ const signOut = async () => {
     _signOut();
   }
 };
+
+const {
+  open: openNotifications,
+} = useNotificationDialog();
 
 </script>

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\NotificationType;
 use Illuminate\Console\Command;
 use App\Enums\ServerMemberRole;
 use App\Enums\ServerPlatformType;
@@ -26,6 +27,7 @@ class EnumConvertJson extends Command
     protected $enums = [
         ServerMemberRole::class,
         ServerPlatformType::class,
+        NotificationType::class,
     ];
 
     /**
@@ -61,6 +63,7 @@ class EnumConvertJson extends Command
             {$exports}
         };";
         $jsContents = implode("\n", $jsContents);
+
         file_put_contents(resource_path('/js/enums.ts'), $jsContents);
     }
 }

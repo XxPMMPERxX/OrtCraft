@@ -25,6 +25,7 @@ class AuthUserResource extends JsonResource
             'minecraft_java_gamertag',
             'minecraft_java_uid',
             'name',
+            'icon_path',
         ]);
 
         return parent::toArray($request);

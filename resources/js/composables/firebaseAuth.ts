@@ -52,6 +52,13 @@ export const useAuth = () => {
         email,
         password
       );
+
+      if (!userCredential.user.emailVerified) {
+        errorText.value = 'メールアドレスの確認が完了していません。受信メールをご確認ください。';
+        await signOut();
+        return false;
+      }
+
       firebaseUser.value = userCredential.user;
       return true;
     } catch (e) {

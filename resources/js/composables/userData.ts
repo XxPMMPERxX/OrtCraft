@@ -6,6 +6,9 @@ interface UserData {
   id: string,
   icon: string,
   name: string,
+  icon_path: string | null,
+  comment: string | null,
+  description: string | null,
   is_verified_minecraft: boolean,
   minecraft_be_uid: string | null,
   minecraft_be_gamertag: string | null,
@@ -33,3 +36,5 @@ export const useUserData = () => {
 if (firebaseUser.value) {
   await loadUserData();
 }
+
+export type { UserData };

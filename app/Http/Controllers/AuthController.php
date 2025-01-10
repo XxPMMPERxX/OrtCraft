@@ -6,13 +6,17 @@ use App\Http\Resources\AuthUserResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Usarise\Identicon\Identicon;
+use Usarise\Identicon\Image\Svg\Canvas;
+use Usarise\Identicon\Resolution;
 
 class AuthController extends Controller
 {
     public function register(StoreUserRequest $request)
     {
         return DB::transaction(function () use ($request) {
-                /** @var \Kreait\Firebase\Auth */
+            /** @var \Kreait\Firebase\Auth */
             $auth = app('firebase.auth');
 
             try {
@@ -30,6 +34,18 @@ class AuthController extends Controller
             $user = User::firstOrNew([
                 'firebase_id' => $firebaseUser->uid
             ]);
+
+            $identicon = new Identicon(
+                new Canvas(),
+                300,
+                Resolution::Small,
+            );
+
+            $path = 'avatars/' . $firebaseUser->uid . '.svg';
+            $response = $identicon->generate($firebaseUser->uid);
+            Storage::put('public/' . $path, $response->output);
+
+            $user->icon_path = $path;
             $user->name = $request->username;
             $user->save();
 

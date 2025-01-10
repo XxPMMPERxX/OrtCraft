@@ -1,6 +1,6 @@
 <template>
   <dialog ref="modal" class="modal" @keydown="disableEscape">
-    <div class="modal-box">
+    <div class="modal-box" :class="maxWidthClass">
       <slot></slot>
     </div>
     <form method="dialog" class="modal-backdrop">
@@ -14,6 +14,10 @@ import { watchEffect, ref } from 'vue';
 const active = defineModel();
 
 const modal = ref<HTMLDialogElement|null>(null);
+
+defineProps<{
+  maxWidthClass?: string,
+}>();
 
 watchEffect(() => {
   /**

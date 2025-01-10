@@ -20,11 +20,13 @@ interface Alert {
    * clseableも無効の場合は５秒後に削除
    */
   close_at?: number,
+
+  onClick?: () => void,
 };
 
 const alerts: Ref<Alert[]> = ref<Alert[]>([]);
 
-const pushAlert = ({ message, color = 'default', closeable = false, close_at = 0}: Alert) => {
+const pushAlert = ({ message, color = 'default', closeable = false, close_at = 0, onClick = () => {}}: Alert) => {
   close_at = close_at > 0 ? close_at : 0;
   const alert: Alert = {
     key: crypto.randomUUID(),
@@ -32,6 +34,7 @@ const pushAlert = ({ message, color = 'default', closeable = false, close_at = 0
     message,
     closeable,
     close_at,
+    onClick,
   };
 
   alerts.value.push(alert);

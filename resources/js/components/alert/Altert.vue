@@ -1,7 +1,14 @@
 <template>
   <transition-group name="alert" tag="ul" class="alert-wrapper md:w-1/3 w-full">
-    <li v-for="alert in alerts" :key="alert.key" class="my-2 w-full">
-      <div role="alert" class="alert flex justify-between opacity-60 hover:opacity-100" :class="getAlertColorClass(alert.color)" >
+    <li
+      v-for="alert in alerts" :key="alert.key" class="my-2 w-full"
+    >
+      <div
+        role="alert"
+        class="alert flex justify-between opacity-60 hover:opacity-100 hover:cursor-pointer"
+        :class="getAlertColorClass(alert.color)"
+        @click="alert.onClick"
+      >
         <div class="flex gap-1.5 items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -76,7 +76,7 @@
                 <table class="table">
                   <!-- head -->
                   <thead>
-                    <tr  class="sticky top-0 bg-base-100 z-50">
+                    <tr class="sticky top-0 bg-base-100 z-50">
                       <th></th>
                       <th>Name</th>
                       <th>Status</th>
@@ -88,7 +88,10 @@
                             class="input input-sm input-bordered w-4/5"
                             placeholder="フレンド内検索"
                           />
-                          <button class="btn btn-sm btn-accent w-auto">
+                          <button
+                            class="btn btn-sm btn-accent w-auto"
+                            @click="isShowSearchUserDialog = true"
+                          >
                             フレンド追加
                             <span class="icon-[charm--plus]"></span>
                           </button>
@@ -97,82 +100,22 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <tr v-for="friend in friends" :key="friend.id">
                       <td></td>
                       <td>
                         <div class="flex items-start gap-3">
-                          <div class="avatar online placeholder">
-                            <div class="bg-neutral text-neutral-content w-12 rounded-full">
-                              <span class="text-xl">AI</span>
+                          <div class="avatar">
+                            <div class="w-12 rounded-full">
+                              <img :src="`storage/${userData?.icon_path}`" />
                             </div>
                           </div>
                           <div>
-                            <div class="font-bold">Hart Hagerty</div>
-                            <div class="text-sm opacity-50">United States</div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td></td>
-                      <td>
-                        <div class="flex items-start gap-3">
-                          <div class="avatar online placeholder">
-                            <div class="bg-neutral text-neutral-content w-12 rounded-full">
-                              <span class="text-xl">AI</span>
+                            <div class="font-bold">
+                              {{ friend.name }}
                             </div>
-                          </div>
-                          <div>
-                            <div class="font-bold">Hart Hagerty</div>
-                            <div class="text-sm opacity-50">United States</div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td></td>
-                      <td>
-                        <div class="flex items-start gap-3">
-                          <div class="avatar online placeholder">
-                            <div class="bg-neutral text-neutral-content w-12 rounded-full">
-                              <span class="text-xl">AI</span>
+                            <div class="font-sm opacity-50">
+                              {{ friend.comment }}
                             </div>
-                          </div>
-                          <div>
-                            <div class="font-bold">Hart Hagerty</div>
-                            <div class="text-sm opacity-50">United States</div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td></td>
-                      <td>
-                        <div class="flex items-start gap-3">
-                          <div class="avatar online placeholder">
-                            <div class="bg-neutral text-neutral-content w-12 rounded-full">
-                              <span class="text-xl">AI</span>
-                            </div>
-                          </div>
-                          <div>
-                            <div class="font-bold">Hart Hagerty</div>
-                            <div class="text-sm opacity-50">United States</div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td></td>
-                      <td>
-                        <div class="flex items-start gap-3">
-                          <div class="avatar offline placeholder">
-                            <div class="bg-neutral text-neutral-content w-12 rounded-full">
-                              <span class="text-xl">AI</span>
-                            </div>
-                          </div>
-                          <div>
-                            <div class="font-bold">Hart Hagerty</div>
-                            <div class="text-sm opacity-50">United States</div>
                           </div>
                         </div>
                       </td>
@@ -181,6 +124,8 @@
                 </table>
               </div>
             </div>
+
+            <SearchUserDialog v-model="isShowSearchUserDialog" />
           </template>
         </Tab>
       </div>
@@ -240,15 +185,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import axios from '@/axios';
 import { useRouter } from 'vue-router';
 import authorizeURI from '@/config/microsoft';
-import { loadUserData, useUserData } from '@/composables/userData';
+import { loadUserData, UserData, useUserData } from '@/composables/userData';
 import { useAuth } from '@/composables/firebaseAuth';
 import theme from '@/composables/theme';
-import ServerRegisterDialog from '@/pages/mypage/ServerRegisterDialog.vue';
-import ServerAuthDialog from './ServerAuthDialog.vue';
+import ServerRegisterDialog from '@/components/dialog/ServerRegisterDialog.vue';
+import ServerAuthDialog from '@/components/dialog/ServerAuthDialog.vue';
+import SearchUserDialog from '@/components/dialog/SearchUserDialog.vue';
 import { type server } from '@/@types/server';
 import { confirm } from '@/composables/confirmDialog';
 import { SERVER_PLATFORM_TYPE } from '@/enums';
@@ -261,6 +207,8 @@ const userData = useUserData();
 const myServers = ref<server[]>([]);
 const isShowServerAuthDialog = ref(false);
 const serverData = ref<server|null>(null)
+
+const isShowSearchUserDialog = ref(false);
 
 const themes = [
   "light",
@@ -298,8 +246,6 @@ const onServerRegisterd = (server: server) => {
   showServerAuthDialog(server);
 };
 
-fetchServers();
-
 const showServerAuthDialog = (server: server) => {
   isShowServerAuthDialog.value = true;
   serverData.value = server;
@@ -332,4 +278,16 @@ const confirmCancelMinecraftAuth = async (platform) => {
     });
   }
 }
+
+const friends = ref<UserData[]>([]);
+const fetchFriends = async () => {
+  const response = await axios.get('/api/friends');
+
+  friends.value = response.data.data;
+}
+
+onMounted(() => {
+  fetchFriends();
+  fetchServers();
+});
 </script>

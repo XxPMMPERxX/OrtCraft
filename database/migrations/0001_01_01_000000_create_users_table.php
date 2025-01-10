@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name')->nullable()->default('');
+            $table->string('icon_path')->nullable();
+            $table->string('comment', 100)->nullable();
+            $table->text('description')->nullable();
             $table->string('firebase_id')->unique();
             $table->string('minecraft_be_uid')->nullable();
             $table->string('minecraft_be_gamertag')->nullable();

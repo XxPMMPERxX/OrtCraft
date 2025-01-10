@@ -32,7 +32,17 @@ const SERVER_PLATFORM_TYPE = {
 };
 
 
+const NOTIFICATION_TYPE = {
+  FRIENDREQUEST: {
+    name: 'FriendRequest',
+    value: 'App\\Notifications\\FriendRequest',
+    label: '友達リクエスト',
+  }
+};
+
+
 export {
   SERVER_MEMBER_ROLE,
-  SERVER_PLATFORM_TYPE
+  SERVER_PLATFORM_TYPE,
+  NOTIFICATION_TYPE
 };
