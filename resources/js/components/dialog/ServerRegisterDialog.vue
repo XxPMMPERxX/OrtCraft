@@ -82,7 +82,7 @@ const loading = ref(false);
 
 const register = () => {
   loading.value = true;
-  axios.post('/api/server', input.value).then((response) => {
+  axios.post('/api/servers', input.value).then((response) => {
     pushAlert({
       message: 'サーバの登録を行いました。続けて認証を行なってください。',
       color: 'success',

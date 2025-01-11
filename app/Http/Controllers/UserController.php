@@ -66,6 +66,7 @@ class UserController extends Controller
                 return response()->json([], 400);
             }
 
+            /** @var User */
             $to = User::findOrFail($to);
 
             $to->notify(

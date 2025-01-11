@@ -60,7 +60,7 @@ const loading = ref(false);
 
 const authServer = () => {
   loading.value = true;
-  axios.put(`/api/server/${props.serverData?.id}/auth`).then(() => {
+  axios.put(`/api/servers/${props.serverData?.id}/auth`).then(() => {
     pushAlert({
       message: 'サーバの登録を行いました。続けて認証を行なってください。',
       color: 'success',

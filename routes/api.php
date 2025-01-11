@@ -27,7 +27,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/notifications', [UserController::class, 'getNotifications']);
 
-    Route::resource('server', ServerController::class, [
+    Route::resource('servers', ServerController::class, [
         'only' => [
             'index',
             'store',

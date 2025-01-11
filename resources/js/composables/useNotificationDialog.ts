@@ -6,7 +6,6 @@ const highlightId = ref<number|null>(null);
 export default function useNotificationDialog() {
   const open = (id = null) => {
     isShowNotificationDialog.value = true;
-    console.log(id);
     highlightId.value = id;
   };
 
