@@ -60,14 +60,29 @@ class UserController extends Controller
     public function sendFriendRequest(Request $request)
     {
         return DB::transaction(function () use ($request) {
+            $user = Auth::user();
             $to = $request->to;
 
-            if (!$to) {
+            if (!$to || $user->id === $to) {
                 return response()->json([], 400);
             }
 
             /** @var User */
             $to = User::findOrFail($to);
+
+            if ($to->is_friend) {
+                return response()->json([
+                    'message' => '既に友達です。',
+                ], 409);
+            }
+
+            $friendRequests = $to->notifications
+                ->where('type', NotificationType::FriendRequest->value);
+            if ($friendRequests->map->data->where('sender_id', $user->id)->count() > 0) {
+                return response()->json([
+                    'message' => '既に申請済みです。',
+                ], 409);
+            }
 
             $to->notify(
                 new FriendRequest($to)
@@ -108,6 +123,8 @@ class UserController extends Controller
                         'user_id_2' => $data['sender_id'],
                     ],
                 ]);
+
+            $notification->delete();
         });
     }
 
