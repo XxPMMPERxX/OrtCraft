@@ -46,6 +46,12 @@ class MinecraftAuthController extends Controller
         $minecrafUid = $profile->getId();
         $gamertag = $profile->getSettings()->getGamertag();
 
+        if (User::where('minecraft_be_uid', $minecrafUid)->exists()) {
+            return response()->json([
+                'message' => '既に登録済みのアカウントです。',
+            ], 409);
+        }
+
         /** @var User */
         $user = Auth::user();
         $user->minecraft_be_uid = $minecrafUid;
