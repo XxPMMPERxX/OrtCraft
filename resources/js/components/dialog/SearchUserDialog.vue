@@ -20,6 +20,15 @@
             <td class="flex justify-between items-center">
               {{ user.name }}
               <button
+                v-if="user.is_friend"
+                class="btn btn-sm btn-disabled"
+                disabled
+              >
+                フレンド済
+              </button>
+
+              <button
+                v-else
                 @click="sendFriendRequest(user)"
                 class="btn btn-sm btn-accent"
               >
@@ -37,6 +46,7 @@
 import { ref, watch } from 'vue';
 import axios from '@/axios';
 import Dialog from './Dialog.vue';
+import { pushAlert } from '@/composables/alert';
 
 const active = defineModel({
   default: false,
@@ -46,9 +56,22 @@ const name = ref('');
 const userList = ref([]);
 
 const sendFriendRequest = async (user) => {
-  await axios.post('/api/send-friend-request', {
-    to: user.id,
-  });
+  try {
+    await axios.post('/api/send-friend-request', {
+      to: user.id,
+    });
+  } catch (e) {
+    const {
+      message = 'フレンド申請に失敗しました',
+    } = e.response?.data ?? undefined;
+
+    pushAlert({
+      color: 'error',
+      message,
+      close_at: 10,
+    });
+  }
+
 };
 
 let timer = null;

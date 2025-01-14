@@ -44,16 +44,24 @@
         </div>
         <ul
           tabindex="0"
-          class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+          class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+        >
+          <li class="text-center my-2">
+            {{ userData?.name }} さん
+          </li>
           <li>
             <RouterLink class="justify-between" :to="{
               path: '/mypage'
             }">
-              Mypage
+              マイページ
             </RouterLink>
           </li>
-          <li><a>Settings</a></li>
-          <li><a @click="signOut()">Logout</a></li>
+          <li>
+            <a>設定</a>
+          </li>
+          <li>
+            <a @click="signOut()">ログアウト</a>
+          </li>
         </ul>
       </div>
 

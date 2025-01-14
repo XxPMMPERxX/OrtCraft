@@ -27,9 +27,15 @@
               <button
                 v-if="notification.type === NOTIFICATION_TYPE.FRIENDREQUEST.value"
                 class="btn btn-sm btn-accent"
+                :class="{ 'btn-disabled': loadingNotificationAction === notification.id }"
                 @click="approveFriendRequest(notification.id)"
               >
                 フレンド承認
+                <span
+                  v-if="loadingNotificationAction === notification.id"
+                  class="loading loading-spinner"
+                >
+                </span>
               </button>
             </div>
           </td>
@@ -82,6 +88,7 @@ import Dialog from './Dialog.vue';
 import { ref, watch } from 'vue';
 import useNotificationDialog from '@/composables/useNotificationDialog';
 import { NOTIFICATION_TYPE } from '@/enums';
+import useFriendStore from '@/composables/useFriendStore';
 
 const {
   isShowNotificationDialog,
@@ -100,7 +107,7 @@ const loading = ref(false);
 
 const fetchNotifications = async () => {
   loading.value = true;
-  notifications.value = [];
+  // notifications.value = [];
   const response = await axios.get('/api/notifications', {
     params: {
       page: paginate.value.page,
@@ -139,14 +146,24 @@ watch(isShowNotificationDialog, () => {
   }
 })
 
+const {
+  fetchFriends,
+} = useFriendStore();
 const loadingNotificationAction = ref(null);
 const approveFriendRequest = async (notificationId) => {
-  loadingNotificationAction.value = notificationId;
+  try {
+    loadingNotificationAction.value = notificationId;
 
-  await axios.post('/api/approve-friend-request', {
-    notificationId,
-  });
+    await axios.post('/api/approve-friend-request', {
+      notificationId,
+    });
+    fetchNotifications();
+    fetchFriends();
+  } catch (e) {
+    //
+  } finally {
+    loadingNotificationAction.value = null;
+  }
 
-  loadingNotificationAction.value = null;
 }
 </script>

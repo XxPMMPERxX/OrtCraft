@@ -47,7 +47,7 @@ watch(userData, async () => {
 
     window.Echo.private(`App.Models.User.${userData.value.id}`)
       .notification((notification) => {
-        console.log(notification);
+        // console.log(notification);
         pushAlert({
           message: notification.title,
           color: 'info',

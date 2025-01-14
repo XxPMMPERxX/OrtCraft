@@ -7,8 +7,10 @@
       </a>
     </div>
 
-    <div v-for="tabContent in tabContents.filter(slotName => getTabName(slotName) === activeTab)" :key="tabContent">
-      <slot :name="tabContent"></slot>
+    <div v-for="tabContent in tabContents" :key="tabContent">
+      <div v-show="getTabName(tabContent) === activeTab">
+        <slot :name="tabContent"></slot>
+      </div>
     </div>
   </div>
 </template>

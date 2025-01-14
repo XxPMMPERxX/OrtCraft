@@ -20,12 +20,20 @@ const { code } =  route.query;
  * ない場合は mypage に戻る
  */
 if (code) {
-
   axios.post('/api/minecraft-auth', { code }).then(() => {
-    loadUserData();
-  }).catch(() => {
     pushAlert({
-      message: 'マインクラフトの認証に失敗しました。時間を空けて再度お確かめください。',
+      message: 'マインクラフトアカウントを連携しました。',
+      color: 'success',
+      close_at: 5,
+    });
+    loadUserData();
+  }).catch((error) => {
+    const {
+      message = 'マインクラフトの認証に失敗しました。時間を空けて再度お確かめください。',
+    } = error.response?.data ?? undefined;
+
+    pushAlert({
+      message,
       color: 'error',
       close_at: 5,
     });
@@ -36,12 +44,8 @@ if (code) {
   });
 
 } else {
-
   router.replace({
     path: '/mypage',
   });
-
 }
-
-
 </script>
