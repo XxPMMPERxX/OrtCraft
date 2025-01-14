@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Kreait\Firebase\Auth\UserRecord;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * @property string  $id
@@ -25,6 +26,7 @@ use Kreait\Firebase\Auth\UserRecord;
  * @property ?string $minecraft_java_uid
  * @property ?string $minecraft_java_gamertag
  *
+ * @property Collection<User> $friends
  * @property ?UserRecord $firebaseUser
  */
 class User extends Authenticatable
@@ -50,6 +52,11 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
+        'pivot',
+    ];
+
+    protected $appends = [
+        'is_friend',
     ];
 
     /**
@@ -85,6 +92,23 @@ class User extends Authenticatable
             'friends',
             'user_id_1',
             'user_id_2',
+        );
+    }
+
+
+    public function isFriend(): Attribute
+    {
+        return Attribute::get(
+            function () {
+                $user = Auth::user();
+
+                if ($user === null) {
+                    return false;
+                }
+
+                return !!$user->friends
+                    ->find('9dee8ef8-5196-4673-a36b-ee20512ca5c5');
+            },
         );
     }
 
