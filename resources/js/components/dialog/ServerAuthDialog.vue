@@ -2,12 +2,6 @@
   <Dialog v-model="active">
     <h3 class="text-lg font-bold text-center my-2">サーバ認証</h3>
 
-    <ul class="steps w-full">
-      <li class="step step-success">サーバ登録</li>
-      <li class="step step-success">サーバ認証</li>
-      <li class="step">完了</li>
-    </ul>
-
     <div>
       <div class="flex flex-col gap-2">
         <div class="my-5">
@@ -18,7 +12,7 @@
           <p>1. サーバー名(MOTD)</p>
         </div>
         <input
-          :value="serverData?.auth_code"
+          :value="serverData?.identity?.auth_code"
           class="input input-bordered w-full"
           placeholder="認証コード"
           readonly
@@ -46,7 +40,7 @@ import { ref } from 'vue';
 import axios from '@/axios';
 import Dialog from '@/components/dialog/Dialog.vue';
 import { pushAlert } from '@/composables/alert';
-import { type server } from '@/@types/server';
+import type server from '@/@types/server';
 
 const props = defineProps<{
   serverData: server | null,

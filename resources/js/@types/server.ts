@@ -1,15 +1,8 @@
-interface server {
+import ServerIdentity from "./ServerIdentity";
+
+export default interface server {
   id: string,
   name?: string;
-  je_port?: number;
-  be_port?: number;
+  identity?: ServerIdentity,
   description?: string;
-  types?: string;
-  platform?: number;
-  auth_code?: string;
-  verified_at?: string;
 }
-
-export {
-  type server
-};

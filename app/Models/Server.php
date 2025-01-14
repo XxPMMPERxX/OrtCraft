@@ -9,8 +9,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Support\Str;
 
+/**
+ * サーバ
+ *
+ * @property string $id
+ * @property string $name
+ * @property string $description
+ * @property string[] $tags
+ *
+ * @property Collection<User> $members
+ * @property Collection<ServerIdentity> $identities 作成ずみの接続情報
+ * @property ?ServerIdentity $identity $identity 現在有効化中の接続情報
+ */
 class Server extends Model
 {
     use HasFactory;
@@ -18,19 +29,12 @@ class Server extends Model
 
     protected $fillable = [
         'name',
-        'address',
-        'je_port',
-        'be_port',
         'description',
         'tags',
     ];
 
     protected $casts = [
         'tags' => Split::class,
-    ];
-
-    protected $hidden = [
-        'auth_code',
     ];
 
     /**
@@ -45,6 +49,21 @@ class Server extends Model
             ]);
     }
 
+
+    public function identities()
+    {
+        return $this->hasMany(ServerIdentity::class);
+    }
+
+
+    public function identity()
+    {
+        return $this->hasOne(ServerIdentity::class)
+            ->where('activated_at', '!=', null)
+            ->orderBy('activated_at', 'DESC');
+    }
+
+
     /**
      * @return static
      */
@@ -55,22 +74,11 @@ class Server extends Model
          * @var static
          */
         $server = self::create($attributes);
-        $server->setAuthCode();
 
         // 作成時のユーザーをオーナにセットする
         $server->members()->attach(Auth::user(), ['user_role' => ServerMemberRole::OWNER]);
 
         return $server;
-    }
-
-    /**
-     * 認証コードを生成して保存
-     */
-    public function setAuthCode()
-    {
-        $authCode = Str::random(10);
-        $this->auth_code = $authCode;
-        $this->save();
     }
 
 

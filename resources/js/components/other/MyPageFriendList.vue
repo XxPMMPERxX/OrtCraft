@@ -29,7 +29,7 @@
                 <div class="flex items-start gap-3">
                   <div class="avatar">
                     <div class="w-12 rounded-full">
-                      <img :src="`storage/${userData?.icon_path}`" />
+                      <img :src="`storage/${friend?.icon_path}`" />
                     </div>
                   </div>
                   <div>
@@ -56,11 +56,7 @@
 import { ref, onMounted } from 'vue';
 import SearchUserDialog from '@/components/dialog/SearchUserDialog.vue';
 import useFriendStore from '@/composables/useFriendStore';
-import { useUserData } from '@/composables/userData';
-
 const isShowSearchUserDialog = ref(false);
-
-const userData = useUserData();
 
 const {
   fetchFriends,

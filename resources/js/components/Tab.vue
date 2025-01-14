@@ -8,6 +8,7 @@
     </div>
 
     <div v-for="tabContent in tabContents" :key="tabContent">
+      <!-- タブを切り替えてもコンポーネントが破棄されないように -->
       <div v-show="getTabName(tabContent) === activeTab">
         <slot :name="tabContent"></slot>
       </div>

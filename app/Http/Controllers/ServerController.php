@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ServerMemberRole;
+use App\Facades\Auth;
 use App\Http\Requests\StoreServerRequest;
 use App\Http\Resources\ServerResource;
 use App\Models\Server;
@@ -30,6 +32,14 @@ class ServerController extends Controller
     public function store(StoreServerRequest $request)
     {
         return DB::transaction(function () use ($request) {
+            $user = Auth::user();
+
+            if ($user->servers()->wherePivot('user_role', '=', ServerMemberRole::OWNER)->count() > 1) {
+                return response()->json([
+                    'message' => '登録可能なサーバ数が制限されています。',
+                ], 409);
+            }
+
             // サーバを作成
             $server = Server::register(
                 $request->validated()

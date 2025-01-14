@@ -10,33 +10,12 @@
   <Dialog v-model="active">
     <h3 class="text-lg font-bold text-center my-2">サーバ登録</h3>
 
-    <ul class="steps w-full">
-      <li class="step step-success">サーバ登録</li>
-      <li class="step">サーバ認証</li>
-      <li class="step">完了</li>
-    </ul>
-
     <div>
       <div class="mt-5 flex flex-col gap-2">
         <input
           v-model="input.name"
           class="input input-bordered w-full"
           placeholder="サーバー名 (例. 元気ニコニコ鯖)"
-        />
-        <input
-          v-model="input.address"
-          class="input input-bordered w-full"
-          placeholder="IP (例. locahost)"
-        />
-        <input
-          v-model="input.je_port"
-          class="input input-bordered w-full"
-          placeholder="Java版 PORT (例. 65535)"
-        />
-        <input
-          v-model="input.be_port"
-          class="input input-bordered w-full"
-          placeholder="統合版 PORT (例. 19132)"
         />
       </div>
 
@@ -60,8 +39,7 @@ import { ref } from 'vue';
 import axios from '@/axios';
 import Dialog from '@/components/dialog/Dialog.vue';
 import { pushAlert } from '@/composables/alert';
-
-const emit = defineEmits(['registerd:server']);
+import useServerStore from '@/composables/useServerStore';
 
 const active = defineModel({
   default: false
@@ -69,30 +47,33 @@ const active = defineModel({
 
 const inputDefault = {
   name: '',
-  address: '',
-  je_port: null,
-  be_port: null,
 };
 /**
  * 登録内容
  */
-const input = ref(structuredClone(inputDefault));
+const input = ref({...inputDefault});
 
 const loading = ref(false);
 
+const {
+  fetchServers,
+} = useServerStore();
+
 const register = () => {
   loading.value = true;
-  axios.post('/api/servers', input.value).then((response) => {
+  axios.post('/api/servers', input.value).then(() => {
     pushAlert({
-      message: 'サーバの登録を行いました。続けて認証を行なってください。',
+      message: 'サーバの登録を行いました。',
       color: 'success',
       close_at: 5,
     });
-    // 登録されたサーバのデータを親コンポーネントに渡す
-    emit('registerd:server', response.data.data);
-  }).catch(() => {
+    fetchServers();
+  }).catch((error) => {
+    const {
+      message = 'サーバの登録に失敗しました。時間をおいて再度お試しください。',
+    } = error.response?.data ?? undefined;
     pushAlert({
-      message: 'サーバの登録に失敗しました。時間をおいて再度お試しください。',
+      message,
       color: 'error',
       closeable: true,
     });
@@ -103,7 +84,7 @@ const register = () => {
      */
     loading.value = false;
     active.value = false;
-    input.value = inputDefault;
+    input.value = {...inputDefault};
   });
 };
 </script>

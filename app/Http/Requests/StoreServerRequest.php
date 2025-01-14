@@ -24,9 +24,6 @@ class StoreServerRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'address' => 'required',
-            'je_port' => 'required_if:be_port,null',
-            'be_port' => 'required_if:je_port,null',
         ];
     }
 }
