@@ -64,9 +64,20 @@ class ServerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Server $server)
+    public function update(StoreServerRequest $request, Server $server)
     {
-        //
+        return DB::transaction(function () use ($request, $server) {
+            $user = Auth::user();
+
+            // サーバーのメンバーでない場合エラー
+            if (!$server->isMember($user)) {
+                return response()->json([], 403);
+            }
+
+            $server->update($request->validated());
+
+            return new ServerResource($server);
+        });
     }
 
     /**

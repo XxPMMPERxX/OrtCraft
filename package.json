@@ -27,7 +27,10 @@
     },
     "dependencies": {
         "@iconify-json/ic": "^1.1.17",
+        "@vavt/cm-extension": "^1.6.0",
         "firebase": "^10.12.0",
+        "md-editor-v3": "^5.2.1",
+        "sanitize-html": "^2.14.0",
         "vue-router": "^4.3.2"
     }
 }

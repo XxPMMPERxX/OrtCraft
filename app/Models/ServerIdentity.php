@@ -24,6 +24,10 @@ class ServerIdentity extends Model
         'is_verify' => 'boolean',
     ];
 
+    protected $hidden = [
+        'auth_code',
+    ];
+
 
     public function server()
     {

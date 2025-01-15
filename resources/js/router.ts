@@ -3,7 +3,7 @@ import TopPage from './pages/Top.vue';
 import AuthPage from './pages/auth/Auth.vue';
 import CallbackPage from './pages/callback/Callback.vue';
 import MyPage from './pages/mypage/Mypage.vue';
-import Dashbord from './pages/server/Dashbord.vue';
+import Dashbord from './pages/server/Dashboard.vue';
 
 const routes = [
   {

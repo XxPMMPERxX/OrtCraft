@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * サーバ
@@ -61,6 +62,14 @@ class Server extends Model
         return $this->hasOne(ServerIdentity::class)
             ->where('activated_at', '!=', null)
             ->orderBy('activated_at', 'DESC');
+    }
+
+
+    public function isMember(User $user = null)
+    {
+        $user = $user ?? Auth::user();
+
+        return $this->members->where('id', $user->id)->count() > 0;
     }
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\Server;
@@ -18,10 +19,11 @@ class ServerResource extends JsonResource
         /** @var Server */
         $server = $this->resource;
 
-        if ($request->only_own) {
-            $server->makeVisible(
-                'auth_code'
-            );
+        $user = Auth::user();
+
+        if ($user->servers()->where('servers.id', $server->id)->exists()) {
+            $server->load(['identity', 'identities']);
+            $server->identity?->makeVisible(['auth_code']);
         }
 
         return $server->toArray();

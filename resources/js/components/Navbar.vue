@@ -38,7 +38,7 @@
           <div class="w-10 rounded-full">
             <img
               alt="User Icon"
-              :src="`storage/${userData?.icon_path}`"
+              :src="`/storage/${userData?.icon_path}`"
             />
           </div>
         </div>

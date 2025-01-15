@@ -1,5 +1,5 @@
 <template>
-  <div class="container [width:350px] md:[width:650px] mx-auto mt-10">
+  <div class="container [width:350px] md:[width:760px] mx-auto mt-10">
     <div class="flex flex-col gap-5">
       <div class="w-full mb-7">
         <Tab>

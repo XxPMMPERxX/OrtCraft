@@ -24,6 +24,11 @@ class StoreServerRequest extends FormRequest
     {
         return [
             'name' => 'required',
+            'description' => [
+                'string',
+                'nullable',
+                'max:1000',
+            ],
         ];
     }
 }
