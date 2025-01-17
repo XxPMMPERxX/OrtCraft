@@ -7,13 +7,15 @@
 
 <script setup>
 import axios from '@/axios';
-import { pushAlert } from '@/composables/alert';
-import { loadUserData } from '@/composables/userData';
+import useAlert from '@/composables/useAlert';
+import useUserData from '@/composables/useUserData';
 import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter();
 const route = useRoute();
+const { loadUserData } = useUserData();
 const { code } =  route.query;
+const { pushAlert } = useAlert();
 
 /**
  * code がある場合は、認証リクエストを投げる

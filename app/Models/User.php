@@ -53,6 +53,9 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'pivot',
+        'firebase_id',
+        'minecraft_be_uid',
+        'minecraft_java_uid',
     ];
 
     protected $appends = [

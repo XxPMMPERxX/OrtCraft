@@ -1,9 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import TopPage from './pages/Top.vue';
-import AuthPage from './pages/auth/Auth.vue';
-import CallbackPage from './pages/callback/Callback.vue';
-import MyPage from './pages/mypage/Mypage.vue';
-import Dashbord from './pages/server/Dashboard.vue';
+import AuthPage from './pages/Auth.vue';
+import CallbackPage from './pages/Callback.vue';
+import MyPage from './pages/MyPage.vue';
+import ServerSetting from './pages/ServerSetting.vue';
+import ServerDashboard from './pages/ServerDashboard.vue';
 
 const routes = [
   {
@@ -23,8 +24,15 @@ const routes = [
     component: CallbackPage,
   },
   {
+    name: 'serverDashboard',
     path: '/server/:id/dashboard',
-    component: Dashbord,
+    component: ServerDashboard,
+    props: true,
+  },
+  {
+    name: 'serverSetting',
+    path: '/server/:id/settings',
+    component: ServerSetting,
     props: true,
   },
 ];

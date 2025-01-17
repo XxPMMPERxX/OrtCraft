@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
-import { useAuth } from "@/composables/firebaseAuth";
-import { pushAlert } from "./composables/alert";
+import { useAuth } from "@/composables/useAuth";
+import useAlert from "./composables/useAlert";
 
 axios.interceptors.request.use(async (request) => {
   const { firebaseUser } = useAuth();
@@ -10,6 +10,7 @@ axios.interceptors.request.use(async (request) => {
   return request;
 });
 
+const { pushAlert } = useAlert();
 axios.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {

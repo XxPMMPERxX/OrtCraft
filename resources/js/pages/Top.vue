@@ -4,8 +4,9 @@
 </template>
 
 <script setup lang="ts">
-import { pushAlert, type Alert } from '@/composables/alert';
+import useAlert ,{ type Alert } from '@/composables/useAlert';
 
+const { pushAlert } = useAlert();
 function addAlert() {
   const colors = [
     'default',

@@ -1,33 +1,32 @@
 <template>
-  <Suspense>
-    <div>
-      <Navbar />
-      <div class="container mx-auto">
-        <RouterView />
-      </div>
-      <ConfirmDialog />
-      <NotificationListDialog />
-      <Altert />
+  <div>
+    <Navbar />
+    <div class="container mx-auto">
+      <RouterView />
     </div>
-  </Suspense>
+    <ConfirmDialog />
+    <NotificationListDialog />
+    <Altert />
+  </div>
 </template>
 
 <script setup>
 import { watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuth } from '@/composables/firebaseAuth';
-import theme from './composables/theme';
+import { useAuth } from '@/composables/useAuth';
+import useTheme from './composables/useTheme';
 import ConfirmDialog from './components/dialog/ConfirmDialog.vue';
 import Altert from './components/alert/Altert.vue';
 import Navbar from '@/components/Navbar.vue';
-import { useUserData } from './composables/userData';
-import { pushAlert } from './composables/alert';
+import useUserData from './composables/useUserData';
+import useAlert from './composables/useAlert';
 import NotificationListDialog from './components/dialog/NotificationListDialog.vue';
 import useNotificationDialog from './composables/useNotificationDialog';
 
-const userData = useUserData();
+const { userData } = useUserData();
 const { firebaseUser } = useAuth();
 const router = useRouter();
+const { pushAlert } = useAlert();
 
 /**
  * ログアウト時ログイン画面に遷移
@@ -66,6 +65,9 @@ watch(userData, async () => {
   }
 }, { immediate: true });
 
+const {
+  theme,
+} = useTheme();
 // テーマ更新毎にセット
 watch(theme, () => {
   document.querySelector('html').dataset.theme = theme.value;

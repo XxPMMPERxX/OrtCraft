@@ -58,7 +58,7 @@ class ServerController extends Controller
      */
     public function show(Server $server)
     {
-        return new JsonResource($server);
+        return new ServerResource($server);
     }
 
     /**

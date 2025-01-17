@@ -2,12 +2,12 @@
 const SERVER_MEMBER_ROLE = {
   OWNER: {
     name: 'OWNER',
-    value: '10',
+    value: 10,
     label: 'オーナー',
   },
   ADMIN: {
     name: 'ADMIN',
-    value: '11',
+    value: 11,
     label: '権限者',
   }
 };

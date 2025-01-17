@@ -18,8 +18,6 @@ return new class extends Migration
             $table->string('name')->comment('サーバ名');
             $table->text('description')->nullable()->comment('サーバの説明');
             $table->string('tags')->nullable()->default('')->comment('サーバのタグ');
-            $table->dateTime('verified_at')->nullable()->comment('サーバが認証された日時');
-            $table->string('auth_code')->nullable()->comment('認証コード');
 
             $table->datetimes();
         });

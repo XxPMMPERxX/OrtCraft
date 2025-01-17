@@ -1,5 +1,5 @@
 <template>
-  <div class="container [width:350px] md:[width:760px] mx-auto mt-10">
+  <div class="container [width:350px] md:[width:760px] mx-auto my-10">
     <div class="flex flex-col gap-5">
       <div class="w-full mb-7">
         <Tab>
@@ -78,18 +78,23 @@
 import axios from '@/axios';
 import { useRouter } from 'vue-router';
 import authorizeURI from '@/config/microsoft';
-import { loadUserData, useUserData } from '@/composables/userData';
-import { useAuth } from '@/composables/firebaseAuth';
-import theme from '@/composables/theme';
-import { confirm } from '@/composables/confirmDialog';
+import useUserData from '@/composables/useUserData';
+import { useAuth } from '@/composables/useAuth';
+import useConfirmDialog from '@/composables/useConfirmDialog';
 import { SERVER_PLATFORM_TYPE } from '@/enums';
-import { pushAlert } from '@/composables/alert';
+import useAlert from '@/composables/useAlert';
 import Tab from '@/components/Tab.vue';
 import MyPageServerList from '@/components/other/MyPageServerList.vue';
 import MyPageFriendList from '@/components/other/MyPageFriendList.vue';
+import useTheme from '@/composables/useTheme';
 
 const { firebaseUser } = useAuth();
-const userData = useUserData();
+const {
+  loadUserData,
+  userData,
+} = useUserData();
+const { pushAlert } = useAlert();
+const { confirm } = useConfirmDialog();
 
 
 const themes = [
@@ -109,9 +114,10 @@ if (!firebaseUser.value) {
   });
 }
 
-const setTheme = (_theme: string) => {
-  theme.value = _theme;
-}
+const {
+  theme,
+  setTheme,
+} = useTheme();
 
 
 const confirmCancelMinecraftAuth = async (platform) => {

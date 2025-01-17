@@ -39,7 +39,7 @@
 import { ref } from 'vue';
 import axios from '@/axios';
 import Dialog from '@/components/dialog/Dialog.vue';
-import { pushAlert } from '@/composables/alert';
+import useAlert from '@/composables/useAlert';
 import type server from '@/@types/server';
 
 const props = defineProps<{
@@ -51,6 +51,8 @@ const active = defineModel({
 });
 
 const loading = ref(false);
+
+const { pushAlert } = useAlert();
 
 const authServer = () => {
   loading.value = true;

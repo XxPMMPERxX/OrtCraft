@@ -38,7 +38,7 @@
 import { ref } from 'vue';
 import axios from '@/axios';
 import Dialog from '@/components/dialog/Dialog.vue';
-import { pushAlert } from '@/composables/alert';
+import useAlert from '@/composables/useAlert';
 import useServerStore from '@/composables/useServerStore';
 
 const active = defineModel({
@@ -58,6 +58,10 @@ const loading = ref(false);
 const {
   fetchServers,
 } = useServerStore();
+
+const {
+  pushAlert,
+} = useAlert();
 
 const register = () => {
   loading.value = true;

@@ -35,8 +35,9 @@
 </template>
 
 <script setup lang="ts">
-import { alerts, closeAlert } from '@/composables/alert';
+import useAlert from '@/composables/useAlert';
 
+const { alerts, closeAlert } = useAlert();
 function getAlertColorClass(color: string = 'default') {
   let className: string | null | undefined = null;
 

@@ -20,6 +20,7 @@ class AuthUserResource extends JsonResource
 
         $user->setVisible([
             'id',
+            'firebase_id',
             'minecraft_be_gamertag',
             'minecraft_be_uid',
             'minecraft_java_gamertag',

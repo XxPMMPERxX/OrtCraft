@@ -20,7 +20,12 @@
 </template>
 
 <script setup lang="ts">
-import { close, dialogRef, content } from '@/composables/confirmDialog';
+import useConfirmDialog from '@/composables/useConfirmDialog';
+
+const {
+  content,
+  close,
+} = useConfirmDialog();
 
 /**
  * エスケープキーでのダイアログ閉じを無効化

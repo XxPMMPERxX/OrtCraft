@@ -70,10 +70,10 @@
 </template>
 
 <script setup lang="ts">
-import { useAuth } from '@/composables/firebaseAuth';
-import { useUserData } from '@/composables/userData';
-import { confirm } from '@/composables/confirmDialog';
-import theme from '@/composables/theme';
+import { useAuth } from '@/composables/useAuth';
+import useUserData from '@/composables/useUserData';
+import useConfirmDialog from '@/composables/useConfirmDialog';
+import useTheme from '@/composables/useTheme';
 import useNotificationDialog from '@/composables/useNotificationDialog';
 
 const {
@@ -82,7 +82,9 @@ const {
 } = useAuth();
 
 const appName = import.meta.env.VITE_APP_NAME;
-const userData = useUserData();
+const { userData } = useUserData();
+const { confirm } = useConfirmDialog();
+const { theme } = useTheme();
 
 const signOut = async () => {
   const result = await confirm({

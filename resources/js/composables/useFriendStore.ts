@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import axios from '@/axios';
-import { UserData } from './userData';
+import { UserData } from './useUserData';
 
 const friends = ref<UserData[]>([]);
 const loading = ref(false);

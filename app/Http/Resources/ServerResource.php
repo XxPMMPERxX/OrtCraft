@@ -21,9 +21,10 @@ class ServerResource extends JsonResource
 
         $user = Auth::user();
 
-        if ($user->servers()->where('servers.id', $server->id)->exists()) {
+        if ($server->isMember($user)) {
             $server->load(['identity', 'identities']);
             $server->identity?->makeVisible(['auth_code']);
+            $server->members->makeVisible('pivot');
         }
 
         return $server->toArray();

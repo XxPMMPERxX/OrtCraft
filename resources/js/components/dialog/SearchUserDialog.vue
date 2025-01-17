@@ -46,7 +46,7 @@
 import { ref, watch } from 'vue';
 import axios from '@/axios';
 import Dialog from './Dialog.vue';
-import { pushAlert } from '@/composables/alert';
+import useAlert from '@/composables/useAlert';
 
 const active = defineModel({
   default: false,
@@ -54,6 +54,7 @@ const active = defineModel({
 
 const name = ref('');
 const userList = ref([]);
+const { pushAlert } = useAlert();
 
 const sendFriendRequest = async (user) => {
   try {
@@ -71,7 +72,6 @@ const sendFriendRequest = async (user) => {
       close_at: 10,
     });
   }
-
 };
 
 let timer = null;

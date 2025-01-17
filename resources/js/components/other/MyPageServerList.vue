@@ -4,7 +4,7 @@
       class="inline-flex overflow-x-scroll rounded-box gap-2 w-full my-5 py-10 dark:bg-gray-600 border border-base-300">
       <div class="p-2 first:pl-28 last:pr-28" v-for="(server, index) in servers" :key="index">
         <div class="card card-compact bg-base-100 w-96 shadow-xl hover:cursor-pointer hover:opacity-80"
-          @click="$router.push(`/server/${server.id}/dashboard`)">
+          @click="$router.push({ name: 'serverDashboard', params: { id: server.id } })">
           <figure>
             <div class="w-full h-40 bg-gray-300">
             </div>

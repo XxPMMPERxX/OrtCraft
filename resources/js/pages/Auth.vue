@@ -85,12 +85,15 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import Tab from '@/components/Tab.vue';
-import { useAuth } from '@/composables/firebaseAuth';
+import { useAuth } from '@/composables/useAuth';
 import router from '@/router';
-import { loadUserData } from '@/composables/userData';
-import { pushAlert } from '@/composables/alert';
+import useUserData from '@/composables/useUserData';
+import useAlert from '@/composables/useAlert';
 
 const { firebaseUser, signIn: _signIn, signUp: _signUp, errorText } = useAuth();
+const { loadUserData } = useUserData();
+const { pushAlert } = useAlert();
+
 const isLoading = ref(false);
 const input = ref({
   username: '',

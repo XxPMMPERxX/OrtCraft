@@ -13,7 +13,12 @@
             <tr>
               <th colspan="3">
                 <div class="flex gap-2">
-                  <input class="input input-sm input-bordered w-4/5" placeholder="フレンド内検索" />
+                  <input
+                    v-model="searchUserName"
+                    class="input input-sm input-bordered w-4/5"
+                    placeholder="フレンド内検索"
+                  />
+
                   <button class="btn btn-sm btn-accent w-auto" @click="isShowSearchUserDialog = true">
                     フレンド追加
                     <span class="icon-[charm--plus]"></span>
@@ -23,7 +28,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="friend in friends" :key="friend.id">
+            <tr v-for="friend in filteredFriends" :key="friend.id">
               <td></td>
               <td>
                 <div class="flex items-start gap-3">
@@ -53,15 +58,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import SearchUserDialog from '@/components/dialog/SearchUserDialog.vue';
 import useFriendStore from '@/composables/useFriendStore';
-const isShowSearchUserDialog = ref(false);
 
+
+const isShowSearchUserDialog = ref(false);
 const {
   fetchFriends,
   friends,
 } = useFriendStore();
+
+const searchUserName = ref('');
+const filteredFriends = computed(() => {
+  if (!searchUserName.value) {
+    return friends.value;
+  }
+
+  return friends.value.filter((friend) => {
+    return friend.name.includes(searchUserName.value);
+  });
+});
 
 onMounted(() => {
   fetchFriends();

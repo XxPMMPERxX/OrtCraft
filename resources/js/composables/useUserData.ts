@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { useAuth } from './firebaseAuth';
+import { useAuth } from './useAuth';
 import axios from '@/axios';
 
 interface UserData {
@@ -19,7 +19,7 @@ interface UserData {
 const userData = ref<UserData|null>(null);
 const { firebaseUser, signOut } = useAuth();
 
-export const loadUserData = async () => {
+const loadUserData = async () => {
   try {
     const response = await axios.get('/api/auth');
     const { data } = response.data
@@ -29,8 +29,12 @@ export const loadUserData = async () => {
   }
 };
 
-export const useUserData = () => {
-  return userData;
+
+export default function useUserData() {
+  return {
+    loadUserData,
+    userData,
+  };
 };
 
 if (firebaseUser.value) {
