@@ -38,4 +38,3 @@ sail npm run dev # viteの開発サーバー起動
 http://localhost/
 
 ## Docs
-Figma: https://www.figma.com/design/PvArIITr5aqyycb0VAKm5P/%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%83%AA%E3%82%B9%E3%83%88WEB?node-id=0%3A1&t=8kCLDTF4Vxl1z8ZJ-1
