@@ -8,7 +8,7 @@
       </RouterLink>
     </div>
 
-    <div class="navbar-end">
+    <div class="navbar-end z-[100]">
       <button
         v-if="firebaseUser" class="btn btn-sm btn-ghost btn-circle mr-5 w-10 h-10"
         @click="openNotifications()"
@@ -57,6 +57,13 @@
             </RouterLink>
           </li>
           <li>
+            <RouterLink class="justify-between" :to="{
+              path: '/myservers'
+            }">
+              サーバ管理
+            </RouterLink>
+          </li>
+          <li>
             <a>設定</a>
           </li>
           <li>
@@ -75,6 +82,7 @@ import useUserData from '@/composables/useUserData';
 import useConfirmDialog from '@/composables/useConfirmDialog';
 import useTheme from '@/composables/useTheme';
 import useNotificationDialog from '@/composables/useNotificationDialog';
+import { RouterLink } from 'vue-router';
 
 const {
   firebaseUser,

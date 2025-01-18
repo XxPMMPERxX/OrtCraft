@@ -1,23 +1,9 @@
 <template>
   <div class="container [width:350px] md:[width:760px] mx-auto my-10">
+    <h1 class="text-2xl font-bold">マイページ</h1>
     <div class="flex flex-col gap-5">
       <div class="w-full mb-7">
-        <Tab>
-          <template #tabTitle.server>
-            サーバー
-          </template>
-          <template #tabTitle.friend>
-            フレンド
-          </template>
-
-          <template #tabContent.server>
-            <MyPageServerList />
-          </template>
-
-          <template #tabContent.friend>
-            <MyPageFriendList />
-          </template>
-        </Tab>
+        <MyPageFriendList />
       </div>
 
       <div class="divider"></div>
@@ -83,8 +69,6 @@ import { useAuth } from '@/composables/useAuth';
 import useConfirmDialog from '@/composables/useConfirmDialog';
 import { SERVER_PLATFORM_TYPE } from '@/enums';
 import useAlert from '@/composables/useAlert';
-import Tab from '@/components/Tab.vue';
-import MyPageServerList from '@/components/other/MyPageServerList.vue';
 import MyPageFriendList from '@/components/other/MyPageFriendList.vue';
 import useTheme from '@/composables/useTheme';
 

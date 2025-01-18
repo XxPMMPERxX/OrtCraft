@@ -1,32 +1,24 @@
 <template>
-  Top
-  <button @click="addAlert()" class="btn">test</button>
+  <div class="container [width:350px] md:[width:760px] mx-auto my-10">
+    <Tab>
+
+      <template #tabTitle.friend>
+        お気に入り
+      </template>
+      <template #tabTitle.server>
+        全てのサーバ
+      </template>
+
+      <template #tabContent.friend>
+        TODO
+      </template>
+      <template #tabContent.server>
+        TODO
+      </template>
+    </Tab>
+  </div>
 </template>
 
 <script setup lang="ts">
-import useAlert ,{ type Alert } from '@/composables/useAlert';
-
-const { pushAlert } = useAlert();
-function addAlert() {
-  const colors = [
-    'default',
-    'info',
-    'success',
-    'error',
-    'warning',
-  ];
-
-  // 配列からランダムに選ぶためのインデックス
-  const randomIndex = Math.floor(Math.random() * 4);
-
-  // ランダムに選ばれた seasons
-  const color = colors[randomIndex];
-  const alert: Alert = {
-    message: 'test',
-    color,
-    closeable: false,
-    close_at: 10,
-  };
-  pushAlert(alert);
-}
+import Tab from '@/components/Tab.vue';
 </script>

@@ -5,6 +5,7 @@ import CallbackPage from './pages/Callback.vue';
 import MyPage from './pages/MyPage.vue';
 import ServerSetting from './pages/ServerSetting.vue';
 import ServerDashboard from './pages/ServerDashboard.vue';
+import MyServer from './pages/MyServer.vue';
 
 const routes = [
   {
@@ -18,6 +19,10 @@ const routes = [
   {
     path: '/mypage',
     component: MyPage,
+  },
+  {
+    path: '/myservers',
+    component: MyServer,
   },
   {
     path: '/callback',
