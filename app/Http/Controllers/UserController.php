@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Enums\NotificationType;
+use App\Enums\ServerMemberRole;
 use App\Enums\ServerPlatformType;
 use App\Facades\Auth;
 use App\Http\Resources\NotificationResource;
 use App\Http\Resources\UserResource;
+use App\Models\Server;
 use App\Models\User;
 use App\Notifications\FriendRequest;
+use App\Notifications\MemberInvitation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -58,6 +61,9 @@ class UserController extends Controller
     }
 
 
+    /**
+     * フレンド申請送信
+     */
     public function sendFriendRequest(Request $request)
     {
         return DB::transaction(function () use ($request) {
@@ -90,6 +96,9 @@ class UserController extends Controller
     }
 
 
+    /**
+     * フレンド申請承認
+     */
     public function approveFriendRequest(Request $request)
     {
         return DB::transaction(function () use ($request) {
@@ -135,9 +144,105 @@ class UserController extends Controller
     }
 
 
+    /**
+     * フレンド一覧取得
+     */
     public function getFriends()
     {
         return new ResourceCollection(Auth::user()->friends);
+    }
+
+
+    /**
+     * メンバー招待送信
+     */
+    public function sendMemberInvitation(Request $request)
+    {
+        return DB::transaction(function () use ($request) {
+            $user = Auth::user();
+            $to = $request->to;
+            $serverId = $request->server_id;
+
+            $server = Server::findOrFail($serverId);
+
+            if (!$server->members()->where('users.id', $user->id)->exists()) {
+                return response()->json([], 403);
+            }
+
+            if (!$to || $user->id === $to) {
+                return response()->json([], 400);
+            }
+
+            /** @var User */
+            $to = User::findOrFail($to);
+
+            if ($server->members()->where('users.id', $to->id)->exists()) {
+                return response()->json([
+                    'message' => '既にメンバーです。',
+                ], 409);
+            }
+
+            $memberInvitations = $to->notifications
+                ->where('type', NotificationType::MemberInvitation->value);
+
+            if ($memberInvitations
+                ->map
+                ->data
+                ->where('sender_id', $user->id)
+                ->where('server_id', $serverId)
+                ->count()  > 0) {
+                return response()->json([
+                    'message' => '既に招待済みです。',
+                ], 409);
+            }
+
+            $to->notify(
+                new MemberInvitation($server, $to)
+            );
+        });
+    }
+
+
+    /**
+     * メンバー招待承認
+     */
+    public function approveMemberInvitation(Request $request)
+    {
+        return DB::transaction(function () use ($request) {
+            $user = Auth::user();
+
+            $notificationId = $request->notificationId;
+
+            /** @var DatabaseNotification */
+            $notification = $user->notifications()->findOrFail($notificationId);
+
+            if ($notification->type !== NotificationType::MemberInvitation->value) {
+                return response()->json([], 400);
+            }
+
+            /** @var array{title:string, sender_id:string, receiver_id:string, server_id:string} */
+            $data = $notification->data;
+
+            if ($data['receiver_id'] !== $user->id) {
+                return response()->json([], 403);
+            }
+
+            $receiver = User::findOrFail($data['receiver_id']);
+            $server = Server::findOrFail($data['server_id']);
+
+
+            if ($server->members()->where('users.id', $receiver->id)->exists()) {
+                $notification->delete();
+                return response()->json([
+                    'message' => '既にメンバーです。',
+                ], 409);
+            }
+
+            // 権限者として追加
+            $server->members()->attach($receiver, ['user_role' => ServerMemberRole::ADMIN]);
+
+            $notification->delete();
+        });
     }
 
 

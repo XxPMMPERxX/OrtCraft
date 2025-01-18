@@ -2,22 +2,22 @@
 
 namespace App\Notifications;
 
-use App\Enums\NotificationType;
 use App\Facades\Auth;
+use App\Models\Server;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Channels\BroadcastChannel;
 use Illuminate\Notifications\Channels\DatabaseChannel;
 use Illuminate\Notifications\Notification;
 
-class FriendRequest extends Notification
+class MemberInvitation extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(protected User $to, protected ?User $from = null)
+    public function __construct(protected Server $server, protected User $to, protected ?User $from = null)
     {
         if (is_null($this->from)) {
             $this->from = Auth::user();
@@ -45,9 +45,10 @@ class FriendRequest extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'title' => "{$this->from->name} さんから友達リクエストが届いています",
+            'title' => "{$this->from->name} さんからサーバメンバーの招待が届いています",
             'sender_id' => $this->from->id,
             'receiver_id' => $this->to->id,
+            'server_id' => $this->server->id,
         ];
     }
 }

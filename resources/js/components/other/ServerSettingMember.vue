@@ -19,7 +19,7 @@
                     placeholder="メンバー内検索"
                   />
 
-                  <button class="btn btn-sm btn-accent w-auto" @click="() => {}">
+                  <button class="btn btn-sm btn-accent w-auto" @click="isOpenSearchUserDialog = true">
                     メンバー追加
                     <span class="icon-[charm--plus]"></span>
                   </button>
@@ -63,13 +63,22 @@
         </table>
       </div>
     </div>
+
+    <SearchUserDialog
+      v-model="isOpenSearchUserDialog"
+      purpose="member"
+      :server_id="model.id"
+    />
   </div>
 </template>
 
 <script setup>
 import useUserData from '@/composables/useUserData';
+import SearchUserDialog from '@/components/dialog/SearchUserDialog.vue';
 import { SERVER_MEMBER_ROLE } from '@/enums';
 import { ref } from 'vue';
+
+const isOpenSearchUserDialog = ref(false);
 
 const { userData } = useUserData();
 const model = defineModel({

@@ -46,7 +46,23 @@
                 </button>
               </template>
 
-              <template v-else></template>
+              <template v-else>
+                <button
+                  v-if="user.already_sent_member_invitation"
+                  class="btn btn-sm btn-disabled"
+                  disabled
+                >
+                  メンバー招待済
+                </button>
+
+                <button
+                  v-else
+                  @click="sendMemberInvitation(user)"
+                  class="btn btn-sm btn-accent"
+                >
+                  メンバー招待
+                </button>
+              </template>
             </td>
           </tr>
         </tbody>
@@ -69,6 +85,9 @@ const props = defineProps({
   purpose: {
     type: String,
     default: 'friend', /// friend or member
+  },
+  server_id: {
+    type: String,
   },
 });
 
@@ -131,5 +150,28 @@ const sendFriendRequest = async (user) => {
   }
 };
 
+const sendMemberInvitation = async (user) => {
+  try {
+    await axios.post('/api/send-member-invitation', {
+      to: user.id,
+      server_id: props.server_id,
+    });
+    pushAlert({
+      color: 'success',
+      message: 'メンバー招待を送信しました',
+      close_at: 10,
+    });
+    fetchUsers();
+  } catch (e) {
+    const {
+      message = 'メンバー招待に失敗しました',
+    } = e.response?.data ?? undefined;
 
+    pushAlert({
+      color: 'error',
+      message,
+      close_at: 10,
+    });
+  }
+};
 </script>

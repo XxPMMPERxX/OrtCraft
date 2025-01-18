@@ -10,36 +10,10 @@
 
     <table class="table table-lg">
       <tbody>
-        <tr
+        <NotificationItem
           v-for="notification in notifications" :key="notification.id"
-          class="duration-1000"
-          :class="{ 'bg-orange-100': notification.id === highlightId }"
-        >
-          <td class="flex items-center justify-between">
-            <div class="flex flex-col gap-2">
-              {{ notification.data.title }}
-              <span class="text-sm text-gray-400">
-                {{ notification.created_at }}
-              </span>
-            </div>
-
-            <div class="w-1/4 text-center">
-              <button
-                v-if="notification.type === NOTIFICATION_TYPE.FRIENDREQUEST.value"
-                class="btn btn-sm btn-accent"
-                :class="{ 'btn-disabled': loadingNotificationAction === notification.id }"
-                @click="approveFriendRequest(notification.id)"
-              >
-                フレンド承認
-                <span
-                  v-if="loadingNotificationAction === notification.id"
-                  class="loading loading-spinner"
-                >
-                </span>
-              </button>
-            </div>
-          </td>
-        </tr>
+          :notification="notification"
+        />
       </tbody>
     </table>
 
@@ -83,17 +57,10 @@
 </template>
 
 <script setup>
-import axios from '@/axios';
 import Dialog from './Dialog.vue';
-import { ref, watch } from 'vue';
+import { watch } from 'vue';
 import useNotificationDialog from '@/composables/useNotificationDialog';
-import { NOTIFICATION_TYPE } from '@/enums';
-import useFriendStore from '@/composables/useFriendStore';
-import useAlert from '@/composables/useAlert';
-
-const {
-  pushAlert,
-} = useAlert();
+import NotificationItem from '../other/NotificationItem.vue';
 
 const {
   fetchNotifications,
@@ -125,32 +92,4 @@ watch(isShowNotificationDialog, () => {
     }, 3000);
   }
 })
-
-const {
-  fetchFriends,
-} = useFriendStore();
-const loadingNotificationAction = ref(null);
-const approveFriendRequest = async (notificationId) => {
-  try {
-    loadingNotificationAction.value = notificationId;
-
-    await axios.post('/api/approve-friend-request', {
-      notificationId,
-    });
-    fetchNotifications();
-    fetchFriends();
-  } catch (error) {
-    const {
-      message = 'フレンドの承認に失敗しました',
-    } = error.response?.data ?? undefined;
-    pushAlert({
-      message,
-      color: 'error',
-      closeable: true,
-    });
-    fetchNotifications();
-  } finally {
-    loadingNotificationAction.value = null;
-  }
-}
 </script>

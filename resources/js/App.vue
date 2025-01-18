@@ -78,14 +78,13 @@ watch(theme, () => {
   immediate: true,
 });
 
-// 自動で通知チェック
 const autoCheckNotification = () => {
   if (firebaseUser.value) {
     checkHasNewNotification();
   }
 };
 
-setInterval(autoCheckNotification, 60 * 1000);
+// setInterval(autoCheckNotification, 60 * 1000);
 
 autoCheckNotification();
 </script>

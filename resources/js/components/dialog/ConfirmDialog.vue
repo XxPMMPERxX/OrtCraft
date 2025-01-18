@@ -25,6 +25,7 @@ import useConfirmDialog from '@/composables/useConfirmDialog';
 const {
   content,
   close,
+  dialogRef,
 } = useConfirmDialog();
 
 /**

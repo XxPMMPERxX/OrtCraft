@@ -25,6 +25,9 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/approve-friend-request', [UserController::class, 'approveFriendRequest']);
     Route::get('/friends', [UserController::class, 'getFriends']);
 
+    Route::post('/send-member-invitation', [UserController::class, 'sendMemberInvitation']);
+    Route::post('/approve-member-invitation', [UserController::class, 'approveMemberInvitation']);
+
     Route::get('/notifications', [UserController::class, 'getNotifications']);
     Route::get('/check-notification', [UserController::class, 'checkNotification']);
 
