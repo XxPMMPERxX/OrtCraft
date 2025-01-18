@@ -16,27 +16,32 @@ const SERVER_MEMBER_ROLE = {
 const SERVER_PLATFORM_TYPE = {
   JAVA: {
     name: 'JAVA',
-    value: '10',
+    value: 10,
     label: 'Java版',
   },
   BE: {
     name: 'BE',
-    value: '11',
+    value: 11,
     label: '統合版',
   },
   JAVA_BE: {
     name: 'JAVA_BE',
-    value: '12',
+    value: 12,
     label: 'Java版/統合版',
   }
 };
 
 
 const NOTIFICATION_TYPE = {
-  FRIENDREQUEST: {
+  FriendRequest: {
     name: 'FriendRequest',
     value: 'App\\Notifications\\FriendRequest',
     label: '友達リクエスト',
+  },
+  MemberInvitation: {
+    name: 'MemberInvitation',
+    value: 'App\\Notifications\\MemberInvitation',
+    label: 'サーバメンバー招待',
   }
 };
 

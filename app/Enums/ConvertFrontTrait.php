@@ -13,7 +13,7 @@ trait ConvertFrontTrait
     {
         $array = array_map(function (BackedEnum|self $case) {
             return [
-                Str::upper($case->name) => [
+                $case->name => [
                     'name' => $case->name,
                     'value' => addcslashes($case->value, '\\'),
                     'label' => $case->label(),

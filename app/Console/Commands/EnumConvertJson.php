@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use App\Enums\ServerMemberRole;
 use App\Enums\ServerPlatformType;
 use Illuminate\Support\Str;
+use ReflectionEnum;
 
 class EnumConvertJson extends Command
 {
@@ -41,10 +42,14 @@ class EnumConvertJson extends Command
             $enumName = Str::upper(Str::snake(class_basename($enum)));
             $exports[] = $enumName;
             $properties = [];
+
+            $backingType = (string)(new ReflectionEnum($enum))->getBackingType();
+
             foreach ($enum::toArray() as $caseName => $enumItem) {
+                $value = $backingType === 'string' ? '\'' . $enumItem['value'] . '\'' : $enumItem['value'];
                 $property = $caseName . ':' . '{
                     name: \'' . $enumItem['name'] . '\',
-                    value: \'' . $enumItem['value'] . '\',
+                    value: ' . $value . ',
                     label: \'' . $enumItem['label'] . '\',
                 }';
                 $properties[] = $property;
