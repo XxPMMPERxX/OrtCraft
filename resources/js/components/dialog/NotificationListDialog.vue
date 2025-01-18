@@ -89,42 +89,22 @@ import { ref, watch } from 'vue';
 import useNotificationDialog from '@/composables/useNotificationDialog';
 import { NOTIFICATION_TYPE } from '@/enums';
 import useFriendStore from '@/composables/useFriendStore';
+import useAlert from '@/composables/useAlert';
 
 const {
+  pushAlert,
+} = useAlert();
+
+const {
+  fetchNotifications,
+  checkHasNewNotification,
+  loading,
+  notifications,
+  paginate,
   isShowNotificationDialog,
   highlightId,
 } = useNotificationDialog();
 
-const notifications = ref([]);
-const paginate = ref({
-  page: 1,
-  items_per_page: 5,
-  total: 0,
-  max_page: 1,
-});
-
-const loading = ref(false);
-
-const fetchNotifications = async () => {
-  loading.value = true;
-  // notifications.value = [];
-  const response = await axios.get('/api/notifications', {
-    params: {
-      page: paginate.value.page,
-      items_per_page: paginate.value.items_per_page,
-    }
-  });
-  loading.value = false;
-  notifications.value = response.data.data;
-
-  const { meta } = response.data;
-  paginate.value = {
-    page: meta.current_page,
-    items_per_page: meta.per_page,
-    total: meta.total,
-    max_page: meta.last_page,
-  };
-}
 
 const selectPage = (pageNum) => {
   if (pageNum < 1 || pageNum > paginate.value.max_page) {
@@ -138,7 +118,7 @@ const selectPage = (pageNum) => {
 watch(isShowNotificationDialog, () => {
   if (isShowNotificationDialog.value) {
     paginate.value.page = 1;
-    fetchNotifications();
+    fetchNotifications().then(checkHasNewNotification);
 
     setTimeout(() => {
       highlightId.value = null;
@@ -159,11 +139,18 @@ const approveFriendRequest = async (notificationId) => {
     });
     fetchNotifications();
     fetchFriends();
-  } catch (e) {
-    //
+  } catch (error) {
+    const {
+      message = 'フレンドの承認に失敗しました',
+    } = error.response?.data ?? undefined;
+    pushAlert({
+      message,
+      color: 'error',
+      closeable: true,
+    });
+    fetchNotifications();
   } finally {
     loadingNotificationAction.value = null;
   }
-
 }
 </script>

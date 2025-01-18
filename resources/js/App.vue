@@ -27,6 +27,10 @@ const { userData } = useUserData();
 const { firebaseUser } = useAuth();
 const router = useRouter();
 const { pushAlert } = useAlert();
+const {
+  checkHasNewNotification,
+  open: openNotifications,
+} = useNotificationDialog();
 
 /**
  * ログアウト時ログイン画面に遷移
@@ -47,15 +51,13 @@ watch(userData, async () => {
     window.Echo.private(`App.Models.User.${userData.value.id}`)
       .notification((notification) => {
         // console.log(notification);
+        checkHasNewNotification();
+
         pushAlert({
           message: notification.title,
           color: 'info',
           close_at: 10,
           onClick: () => {
-            const {
-              open: openNotifications,
-            } = useNotificationDialog();
-
             openNotifications(notification.id)
           },
         });
@@ -75,4 +77,15 @@ watch(theme, () => {
 {
   immediate: true,
 });
+
+// 自動で通知チェック
+const autoCheckNotification = () => {
+  if (firebaseUser.value) {
+    checkHasNewNotification();
+  }
+};
+
+setInterval(autoCheckNotification, 60 * 1000);
+
+autoCheckNotification();
 </script>

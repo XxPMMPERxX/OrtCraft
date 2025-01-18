@@ -111,6 +111,13 @@ class UserController extends Controller
                 return response()->json([], 403);
             }
 
+            if (User::find($data['sender_id'])->is_friend) {
+                $notification->delete();
+                return response()->json([
+                    'message' => '既に友達です。',
+                ], 409);
+            }
+
             DB::table('friends')
                 ->insert([
                     [
@@ -136,9 +143,17 @@ class UserController extends Controller
 
     public function getNotifications(Request $request)
     {
-        return NotificationResource::collection(
-            Auth::user()->notifications()
-                ->paginate($request->items_per_page ?? -1)
-        );
+        $notifications = Auth::user()->notifications()
+            ->paginate($request->items_per_page ?? -1);
+        $notifications->markAsRead();
+
+        return NotificationResource::collection($notifications);
+    }
+
+    public function checkNotification(Request $request)
+    {
+        return new JsonResource([
+            'has_new_notification' => Auth::user()->unreadNotifications()->exists(),
+        ]);
     }
 }

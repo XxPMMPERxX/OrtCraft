@@ -26,6 +26,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/friends', [UserController::class, 'getFriends']);
 
     Route::get('/notifications', [UserController::class, 'getNotifications']);
+    Route::get('/check-notification', [UserController::class, 'checkNotification']);
 
     Route::resource('servers', ServerController::class, [
         'only' => [
