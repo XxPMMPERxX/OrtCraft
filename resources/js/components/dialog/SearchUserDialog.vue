@@ -19,21 +19,34 @@
           <tr v-for="user in userList" :key="user.id">
             <td class="flex justify-between items-center">
               {{ user.name }}
-              <button
-                v-if="user.is_friend"
-                class="btn btn-sm btn-disabled"
-                disabled
-              >
-                フレンド済
-              </button>
 
-              <button
-                v-else
-                @click="sendFriendRequest(user)"
-                class="btn btn-sm btn-accent"
-              >
-                フレンド申請
-              </button>
+              <template v-if="purpose === 'friend'">
+                <button
+                  v-if="user.is_friend"
+                  class="btn btn-sm btn-disabled"
+                  disabled
+                >
+                  フレンド済
+                </button>
+
+                <button
+                  v-else-if="user.already_sent_friend_request"
+                  class="btn btn-sm btn-disabled"
+                  disabled
+                >
+                  フレンド申請済
+                </button>
+
+                <button
+                  v-else
+                  @click="sendFriendRequest(user)"
+                  class="btn btn-sm btn-accent"
+                >
+                  フレンド申請
+                </button>
+              </template>
+
+              <template v-else></template>
             </td>
           </tr>
         </tbody>
@@ -52,15 +65,59 @@ const active = defineModel({
   default: false,
 });
 
+const props = defineProps({
+  purpose: {
+    type: String,
+    default: 'friend', /// friend or member
+  },
+});
+
 const name = ref('');
 const userList = ref([]);
 const { pushAlert } = useAlert();
+
+let timer = null;
+
+const fetchUsers = () => {
+  axios.get('/api/users', {
+    params: {
+      name: name.value,
+      for_friend: props.purpose === 'friend' ? 1 : 0,
+      for_member: props.purpose === 'member' ? 1 : 0,
+      ignore_self: 1,
+    },
+  }).then((res) => {
+    timer = null;
+    userList.value = res.data.data;
+  });
+};
+
+watch(name, () => {
+  if (timer) {
+    clearTimeout(timer);
+  }
+
+  timer = setTimeout(fetchUsers, 500);
+});
+
+watch(active, () => {
+  if (!active.value) {
+    name.value = '';
+    userList.value = [];
+  }
+});
 
 const sendFriendRequest = async (user) => {
   try {
     await axios.post('/api/send-friend-request', {
       to: user.id,
     });
+    pushAlert({
+      color: 'success',
+      message: 'フレンド申請を送信しました',
+      close_at: 10,
+    });
+    fetchUsers();
   } catch (e) {
     const {
       message = 'フレンド申請に失敗しました',
@@ -74,29 +131,5 @@ const sendFriendRequest = async (user) => {
   }
 };
 
-let timer = null;
-watch(name, () => {
-  if (timer) {
-    clearTimeout(timer);
-  }
 
-  timer = setTimeout(() => {
-    axios.get('/api/users', {
-      params: {
-        name: name.value,
-        ignore_self: 1,
-      },
-    }).then((res) => {
-      timer = null;
-      userList.value = res.data.data;
-    })
-  }, 500);
-});
-
-watch(active, () => {
-  if (!active.value) {
-    name.value = '';
-    userList.value = [];
-  }
-});
 </script>

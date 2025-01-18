@@ -6,6 +6,7 @@ use App\Enums\NotificationType;
 use App\Enums\ServerPlatformType;
 use App\Facades\Auth;
 use App\Http\Resources\NotificationResource;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Notifications\FriendRequest;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        return new ResourceCollection(
+        return UserResource::collection(
             User::search($request->all())
                 ->get()
                 ->filter(function (User $user) {
@@ -76,9 +77,7 @@ class UserController extends Controller
                 ], 409);
             }
 
-            $friendRequests = $to->notifications
-                ->where('type', NotificationType::FriendRequest->value);
-            if ($friendRequests->map->data->where('sender_id', $user->id)->count() > 0) {
+            if ($to->already_sent_friend_request > 0) {
                 return response()->json([
                     'message' => '既に申請済みです。',
                 ], 409);

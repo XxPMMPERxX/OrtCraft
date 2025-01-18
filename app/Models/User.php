@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Enums\NotificationType;
 use App\Facades\Auth;
 use Exception;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -56,10 +57,7 @@ class User extends Authenticatable
         'firebase_id',
         'minecraft_be_uid',
         'minecraft_java_uid',
-    ];
-
-    protected $appends = [
-        'is_friend',
+        'notifications',
     ];
 
     /**
@@ -110,7 +108,30 @@ class User extends Authenticatable
                 }
 
                 return !!$user->friends
-                    ->find('9dee8ef8-5196-4673-a36b-ee20512ca5c5');
+                    ->find($this->id);
+            },
+        );
+    }
+
+
+    public function alreadySentFriendRequest(): Attribute
+    {
+        return Attribute::get(
+            function () {
+                $user = Auth::user();
+
+                if ($user === null) {
+                    return false;
+                }
+
+                $friendRequests = $this->notifications
+                    ->where('type', NotificationType::FriendRequest->value);
+
+                return $friendRequests
+                    ->map
+                    ->data
+                    ->where('sender_id', $user->id)
+                    ->count() > 0;
             },
         );
     }
