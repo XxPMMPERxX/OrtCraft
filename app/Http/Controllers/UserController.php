@@ -188,7 +188,6 @@ class UserController extends Controller
             if ($memberInvitations
                 ->map
                 ->data
-                ->where('sender_id', $user->id)
                 ->where('server_id', $serverId)
                 ->count()  > 0) {
                 return response()->json([

@@ -8,7 +8,6 @@ use App\Http\Requests\StoreServerRequest;
 use App\Http\Resources\ServerResource;
 use App\Models\Server;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 
@@ -86,6 +85,15 @@ class ServerController extends Controller
     public function destroy(Server $server)
     {
         DB::transaction(function () use ($server) {
+            $user = Auth::user();
+            if ($server
+                ->members()
+                ->wherePivot('user_role', '=', ServerMemberRole::OWNER)
+                ->where('users.id', '!=', $user->id)->exists()
+            ) {
+                return response()->json([], 403);
+            }
+
             $server->delete();
         });
     }

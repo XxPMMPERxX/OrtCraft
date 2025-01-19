@@ -51,7 +51,7 @@
                 <div
                   class="badge text-white"
                   :class="{
-                    'badge-error': member.pivot.user_role == SERVER_MEMBER_ROLE.OWNER.value,
+                    'badge-warning': member.pivot.user_role == SERVER_MEMBER_ROLE.OWNER.value,
                     'badge-primary': member.pivot.user_role == SERVER_MEMBER_ROLE.ADMIN.value,
                   }"
                 >
@@ -64,6 +64,23 @@
       </div>
     </div>
 
+    <div class="mt-24">
+      <button
+        v-if="userData.id === owner.id"
+        class="btn btn-error text-white w-full"
+        @click="deleteServer()"
+      >
+        サーバ削除
+      </button>
+
+      <button
+        v-else
+        class="btn btn-error text-white w-full"
+      >
+        サーバ脱退
+      </button>
+    </div>
+
     <SearchUserDialog
       v-model="isOpenSearchUserDialog"
       purpose="member"
@@ -73,10 +90,14 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
+import axios from '@/axios';
 import useUserData from '@/composables/useUserData';
 import SearchUserDialog from '@/components/dialog/SearchUserDialog.vue';
 import { SERVER_MEMBER_ROLE } from '@/enums';
-import { ref } from 'vue';
+import useConfirmDialog from '@/composables/useConfirmDialog';
+import useAlert from '@/composables/useAlert';
+import { useRouter } from 'vue-router';
 
 const isOpenSearchUserDialog = ref(false);
 
@@ -98,4 +119,44 @@ const getRoleName = (role) => {
       return '';
   }
 }
+
+const owner = model.value.members.find((member) => member.pivot.user_role === SERVER_MEMBER_ROLE.OWNER.value);
+
+const {
+  confirm,
+} = useConfirmDialog();
+const {
+  pushAlert,
+} = useAlert();
+const router = useRouter();
+const deleteServer = async () => {
+  const isConfirmed = await confirm({
+    title: 'サーバ削除',
+    body: 'サーバを削除してよろしいですか？（この操作は取り消せません）',
+  });
+
+  if (!isConfirmed) return;
+
+  try {
+    await axios.delete(`/api/servers/${model.value.id}`);
+    pushAlert({
+      message: 'サーバを削除しました',
+      color: 'success',
+      close_at: 5,
+    });
+    router.replace({
+      path: '/myservers',
+    });
+  } catch (error) {
+    const {
+      message = 'サーバの削除に失敗しました',
+    } = error.response?.data ?? undefined;
+
+    pushAlert({
+      message,
+      color: 'error',
+      close_at: 5,
+    });
+  }
+};
 </script>

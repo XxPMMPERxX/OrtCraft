@@ -37,6 +37,7 @@ Route::middleware('auth:api')->group(function () {
             'store',
             'show',
             'update',
+            'destroy',
         ],
     ]);
 });
