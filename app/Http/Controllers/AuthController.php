@@ -49,6 +49,8 @@ class AuthController extends Controller
             $user->name = $request->username;
             $user->save();
 
+            $auth->sendEmailVerificationLink($request->email);
+
             return new AuthUserResource(
                 $user
             );
