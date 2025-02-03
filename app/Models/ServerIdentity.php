@@ -8,6 +8,15 @@ use Illuminate\Support\Str;
 
 /**
  * サーバ接続情報
+ *
+ * @property int $id
+ * @property int $server_id
+ * @property string $address
+ * @property ?int $je_port
+ * @property ?int $be_port
+ * @property ?string $auth_code
+ * @property ?string $activated_at
+ * @property boolean $is_verify
  */
 class ServerIdentity extends Model
 {
@@ -17,7 +26,6 @@ class ServerIdentity extends Model
         'address',
         'je_port',
         'be_port',
-        'is_verify',
     ];
 
     protected $casts = [

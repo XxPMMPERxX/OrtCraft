@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Enums\ServerMemberRole;
 use App\Facades\Auth;
+use App\Http\Requests\StoreServerIdentityRequest;
 use App\Http\Requests\StoreServerRequest;
 use App\Http\Resources\ServerResource;
 use App\Models\Server;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\DB;
 
 class ServerController extends Controller
@@ -96,5 +98,31 @@ class ServerController extends Controller
 
             $server->delete();
         });
+    }
+
+
+    /**
+     * サーバーの接続情報を追加
+     */
+    public function registerIdentity(StoreServerIdentityRequest $request, Server $server)
+    {
+        return DB::transaction(function () use ($request, $server) {
+            if ($server->identities->count() >= 3) {
+                return response()->json([
+                    'message' => '登録可能な接続情報が制限されています。',
+                ], 409);
+            }
+
+            $server->identities()->create($request->validated());
+        });
+    }
+
+
+    /**
+     * サーバーの接続情報を認証
+     */
+    public function authIdentity(Request $request, Server $server)
+    {
+        //
     }
 }
