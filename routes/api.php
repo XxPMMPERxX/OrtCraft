@@ -31,6 +31,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/notifications', [UserController::class, 'getNotifications']);
     Route::get('/check-notification', [UserController::class, 'checkNotification']);
 
+    Route::post('/servers/{server}/register-identity', [ServerController::class, 'registerIdentity']);
+    Route::put('/servers/{server}/auth-identity', [ServerController::class, 'authIdentity']);
     Route::resource('servers', ServerController::class, [
         'only' => [
             'index',

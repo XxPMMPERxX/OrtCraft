@@ -30,7 +30,7 @@
       </template>
 
       <template #tabContent.identity>
-        <ServerSettingIdentity v-if="server" />
+        <ServerSettingIdentity v-if="server" v-model="server" />
       </template>
 
       <template #tabContent.member>
