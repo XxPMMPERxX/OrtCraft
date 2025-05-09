@@ -17,6 +17,7 @@ return new class extends Migration
 
             $table->foreignIdFor(Server::class)->constrained()->cascadeOnDelete();
 
+            $table->string('label')->nullable()->comment('ラベル');
             $table->string('address')->comment('サーバのIP');
             $table->integer('je_port', unsigned: true)->nullable()->comment('サーバ(JE)のポート');
             $table->integer('be_port', unsigned: true)->nullable()->comment('サーバ(BE)のポート');

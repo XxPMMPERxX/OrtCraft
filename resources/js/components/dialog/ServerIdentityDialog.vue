@@ -18,7 +18,7 @@
 
       <div class="flex flex-col gap-2">
         <input
-          v-model="input.address"
+          v-model="input.label"
           class="input input-bordered w-full"
           placeholder="ラベル"
         />
@@ -65,9 +65,7 @@ import Dialog from '@/components/dialog/Dialog.vue';
 import useAlert from '@/composables/useAlert';
 import type server from '@/@types/server';
 
-const props = defineProps<{
-  serverData: server | null,
-}>();
+const serverData = defineModel<server|null>('serverData');
 
 const active = defineModel({
   default: false
@@ -78,6 +76,7 @@ const loading = ref(false);
 const { pushAlert } = useAlert();
 
 const input = ref({
+  label: '',
   address: '',
   je_port: '',
   be_port: '',
@@ -85,17 +84,26 @@ const input = ref({
 
 const addIdentity = () => {
   loading.value = true;
-  axios.post(`/api/servers/${props.serverData?.id}/register-identity`, {
+  axios.post(`/api/servers/${serverData.value?.id}/register-identity`, {
     ...input.value,
-  }).then(() => {
+  }).then((response) => {
     pushAlert({
       message: '接続情報の追加を行いました。続けて認証を行なってください。',
       color: 'success',
       close_at: 5,
     });
-  }).catch(() => {
+
+    /**
+     * 接続情報リストを更新する
+     */
+    if (serverData.value) {
+      serverData.value.identities = response.data.data;
+    }
+  }).catch((error) => {
+    const message = error?.response?.data.message ?? '接続情報の追加に失敗しました。時間をおいて再度お試しください。';
+
     pushAlert({
-      message: '接続情報の追加に失敗しました。時間をおいて再度お試しください。',
+      message,
       color: 'error',
       close_at: 5,
     });

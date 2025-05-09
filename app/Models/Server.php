@@ -38,9 +38,7 @@ class Server extends Model
         'tags' => Split::class,
     ];
 
-    /**
-     * @return BelongsToMany
-     */
+
     public function members()
     {
         return $this->belongsToMany(User::class, 'server_members')
@@ -60,12 +58,13 @@ class Server extends Model
     public function identity()
     {
         return $this->hasOne(ServerIdentity::class)
+            ->where('is_verify', true)
             ->where('activated_at', '!=', null)
             ->orderBy('activated_at', 'DESC');
     }
 
 
-    public function isMember(User $user = null)
+    public function isMember(?User $user = null)
     {
         $user = $user ?? Auth::user();
 

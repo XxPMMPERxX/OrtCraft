@@ -6,3 +6,8 @@ body {
     position: relative;
     min-height: 100vh;
 }
+
+
+.tiptap.ProseMirror {
+    height: 600px;
+}

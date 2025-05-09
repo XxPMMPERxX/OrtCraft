@@ -16,37 +16,35 @@
     <div class="my-5 flex flex-col gap-2">
       <span class="font-bold">
         紹介文
-        <span class="text-xs ml-2 font-normal text-gray-400">
-          Markdown記法が利用できます
+        <span class="text-xs ml-2 link link-primary">
+          書き方について
         </span>
       </span>
 
-      <MdEditor
+      <Editor
         v-model="input.description"
-        language="ja_JP"
-        :sanitize="sanitize"
       />
     </div>
 
-    <button
-      class="btn btn-info mt-2"
-      :class="{ 'btn-disabled': !changed }"
-      :disabled="loading"
-      @click="save"
-    >
-      <span class="loading loading-spinner" v-if="loading"></span>
-      保存
-    </button>
+    <div class="flex fixed left-0 bottom-0 w-full pb-10 pr-10 md:pr-20 justify-end">
+      <button
+        class="btn btn-info"
+        :class="{ 'btn-disabled': !changed }"
+        :disabled="loading"
+        @click="save"
+      >
+        <span class="loading loading-spinner" v-if="loading"></span>
+        保存
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { computed, ref, watch } from 'vue';
-import { MdEditor } from 'md-editor-v3';
-import sanitizeHtml from 'sanitize-html';
 import axios from '@/axios';
-import 'md-editor-v3/lib/style.css';
 import useAlert from '@/composables/useAlert';
+import Editor from '../Editor.vue';
 
 const model = defineModel({
   type: Object,
@@ -79,7 +77,7 @@ const save = async () => {
     loading.value = true;
     const response = await axios.patch(`/api/servers/${model.value.id}`, {
       name: input.value.name,
-      description: sanitize(input.value.description),
+      description: input.value.description,
     });
 
     const {
@@ -101,6 +99,4 @@ const save = async () => {
     loading.value = false;
   }
 }
-
-const sanitize = (html) => sanitizeHtml(html);
 </script>

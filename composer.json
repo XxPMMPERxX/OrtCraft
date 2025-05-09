@@ -12,7 +12,8 @@
         "laravel/reverb": "@beta",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
-        "usarise/identicon": "^0.8.2"
+        "usarise/identicon": "^0.8.2",
+        "xpaw/php-minecraft-query": "^5.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

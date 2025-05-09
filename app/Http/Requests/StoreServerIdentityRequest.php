@@ -22,19 +22,26 @@ class StoreServerIdentityRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'label' => [
+                'string',
+                'nullable',
+                'max:40',
+            ],
             'address' => [
                 'required',
                 'string',
-                'regex:/^(?:(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}|(?:25[0-5]|2[0-4]\d|1\d\d|\d{1,2})\.(?:25[0-5]|2[0-4]\d|1\d\d|\d{1,2})\.(?:25[0-5]|2[0-4]\d|1\d\d|\d{1,2})\.(?:25[0-5]|2[0-4]\d|1\d\d|\d{1,2}))$/'
             ],
             'je_port' => [
                 'required_without:be_port',
+                'nullable',
                 'integer',
                 'min:1',
                 'max:65535',
             ],
             'be_port' => [
                 'required_without:je_port',
+                'nullable',
+                'integer',
                 'min:1',
                 'max:65535',
             ],

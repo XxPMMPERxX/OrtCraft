@@ -7,16 +7,30 @@
       </div>
 
       <div
-        v-for="identity in serverData"
+        v-for="identity in serverData.identities"
         :key="identity.id"
         class="flex w-3/4 px-4 py-2"
       >
         <div class="flex justify-between w-full">
           <div class="flex flex-col items-center w-20">
-            <input type="radio" name="activeIdentity" class="radio radio-primary" />
+            <input
+              type="radio"
+              name="activeIdentity"
+              class="radio radio-primary"
+              :checked="identity === serverData.identity"
+            />
           </div>
-          <div class="w-full flex items-center justify-center">
-            {{ identity.name }}
+          <div class="w-full flex items-center justify-between">
+            {{ identity.label }}
+
+            <div class="flex gap-2">
+              <div v-if="identity.je_port" class="badge badge-neutral">
+                {{ identity.address }}:{{ identity.je_port }}
+              </div>
+              <div v-if="identity.be_port" class="badge badge-neutral">
+                {{ identity.address }}:{{ identity.be_port }}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -31,7 +45,7 @@
 
     <ServerIdentityDialog
       v-model="isShowIdentityDialog"
-      :server-data="serverData"
+      v-model:server-data="serverData"
     />
   </div>
 </template>

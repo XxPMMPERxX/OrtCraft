@@ -10,7 +10,6 @@ use App\Http\Resources\ServerResource;
 use App\Models\Server;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\DB;
 
 class ServerController extends Controller
@@ -114,6 +113,8 @@ class ServerController extends Controller
             }
 
             $server->identities()->create($request->validated());
+
+            return new JsonResource($server->identities()->get());
         });
     }
 

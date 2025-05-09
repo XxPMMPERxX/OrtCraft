@@ -17,7 +17,7 @@ class Split implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        return explode(',', $value);
+        return array_filter(explode(',', $value));
     }
 
     /**

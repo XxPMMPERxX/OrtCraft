@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 import daisyui from 'daisyui';
 import { addDynamicIconSelectors } from '@iconify/tailwind';
+import typography from '@tailwindcss/typography';
 
 export default {
   content: [
@@ -23,6 +24,7 @@ export default {
     ],
   },
   plugins: [
+    typography,
     daisyui,
     addDynamicIconSelectors(),
   ],

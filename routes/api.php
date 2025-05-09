@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\MinecraftAuthController;
 use App\Http\Controllers\ServerController;
 use App\Http\Controllers\TestController;
@@ -42,4 +43,6 @@ Route::middleware('auth:api')->group(function () {
             'destroy',
         ],
     ]);
+
+    Route::post('upload', [FileController::class, 'upload']);
 });

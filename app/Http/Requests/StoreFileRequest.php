@@ -3,12 +3,11 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
-class StoreServerRequest extends FormRequest
+class StoreFileRequest extends FormRequest
 {
     /**
-     * マイクラ認証が済んでいる場合のみ、サーバ登録を可能にする
+     * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
@@ -23,11 +22,11 @@ class StoreServerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
-            'description' => [
-                'string',
-                'nullable',
-                'max:2000',
+            'attachment' => [
+                'required',
+                'file',
+                'max:1024',
+                'image',
             ],
         ];
     }
